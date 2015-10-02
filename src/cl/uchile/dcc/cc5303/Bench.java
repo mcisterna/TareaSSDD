@@ -10,7 +10,6 @@ import java.util.Random;
 public class Bench {
     int posX, posY;
     int w, h;
-    int level;
 
     public Bench(int x, int y, int width){
         this.w = width;
@@ -37,15 +36,6 @@ public class Bench {
 
     public int right() {
         return this.posX + this.w;
-    }
-
-    public void levelDown() {
-        this.level--;
-        this.posY = 600 - level*100 - this.h;
-    }
-
-    public int getLevel() {
-        return level;
     }
 
 

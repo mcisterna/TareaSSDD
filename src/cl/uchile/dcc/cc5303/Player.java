@@ -45,22 +45,18 @@ public class Player {
         return "player: position ("+this.posX+","+this.posY+")";
     }
 
-    public boolean collide(Bench b){
+    public boolean bottomCollide(Bench b){
         return Math.abs(bottom() - b.top()) < 10 && right() <= b.right() && left() >= b.left();
     }
 
-    public boolean hit(Bench b){
+    public boolean topCollide(Bench b){
         return Math.abs(top() - b.bottom()) < 10 && right() <= b.right() && left() >= b.left();
     }
     
     public boolean topCollide(Player p){
     	return Math.abs(top() - p.bottom()) < 5 && Math.abs(right() - p.right()) < 10 && Math.abs(left() - p.left()) < 10;
     }
-    
-    public boolean bottomCollide(Player p){
-    	return Math.abs(p.top() - bottom()) < 5 && Math.abs(right() - p.right()) < 10 && Math.abs(left() - p.left()) < 10;
-    }
-    
+
     public boolean rightCollide(Player p){
     	boolean right = (Math.abs(right() - p.left()) < 5);
     	boolean m = Math.abs(top() - p.top()) < 20;
@@ -71,6 +67,18 @@ public class Player {
     	boolean left = (Math.abs(p.right() - left()) < 5);
     	boolean m = Math.abs(top() - p.top()) < 20;
     	return left && m;
+    }
+
+    public boolean rightCollide(Bench p){
+        boolean right = (Math.abs(right() - p.left()) < 5);
+        boolean m = Math.abs(top() - p.top()) < 20;
+        return right && m;
+    }
+
+    public boolean leftCollide(Bench p){
+        boolean left = (Math.abs(p.right() - left()) < 5);
+        boolean m = Math.abs(top() - p.top()) < 20;
+        return left && m;
     }
 
     public int top() {

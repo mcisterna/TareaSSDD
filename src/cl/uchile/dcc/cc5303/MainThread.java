@@ -3,9 +3,7 @@ package cl.uchile.dcc.cc5303;
 import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Random;
 
 /**
@@ -29,24 +27,6 @@ public class MainThread extends Thread {
     
     LinkedList<Level> levels;
 
-    private Bench[] benches = {
-            new Bench(0, 800, 0),
-            new Bench(100, 200, 1),
-            new Bench(400, 200, 1),
-            new Bench(300, 100, 2),
-            new Bench(600, 200, 2),
-            new Bench(150, 200, 3),
-            new Bench(700, 100, 3),
-            new Bench(75, 200, 4),
-            new Bench(350, 350, 4),
-            new Bench(200, 200, 5),
-            new Bench(400, 400, 6),
-            new Bench(200, 400, 7),
-            new Bench(150, 200, 8),
-            new Bench(75, 100, 9),
-            new Bench(50, 100, 10)
-    };
-
     public MainThread() {
         keys = new boolean[KeyEvent.KEY_LAST];
         levels = new LinkedList<Level>();
@@ -66,7 +46,7 @@ public class MainThread extends Thread {
         tablero = new Board(WIDTH, HEIGHT);
         tablero.p1 = player1;
         tablero.p2 = player2;
-        tablero.bases = benches;
+        tablero.levels = levels;
 
         frame.add(tablero);
         tablero.setSize(WIDTH, HEIGHT);
@@ -125,27 +105,29 @@ public class MainThread extends Thread {
 
             //update barras
             boolean levelsDown = false;
-            for (Bench barra : tablero.bases) {
-                if (tablero.p1.hit(barra))
-                    tablero.p1.speed = 0.8;
-                else if (tablero.p1.collide(barra)) {
-                    tablero.p1.speed = 0.01;
-                    tablero.p1.standUp = true;
-                    if (barra.getLevel() == 5){
-                        levelsDown = true;
+            for(Level l : levels){
+                for (Bench barra : l.benches) {
+                    if (tablero.p1.topCollide(barra))
+                        tablero.p1.speed = 0.8;
+                    else if (tablero.p1.bottomCollide(barra)) {
+                        tablero.p1.speed = 0.01;
+                        tablero.p1.standUp = true;
+                        if (l.id >= 4) {
+                            levelsDown = true;
+                        }
                     }
-                }
 
-                if (tablero.p2.hit(barra))
-                    tablero.p2.speed = 0.8;
-                else if (tablero.p2.collide(barra)) {
-                    tablero.p2.speed = 0.01;
-                    tablero.p2.standUp = true;
-                    if (barra.getLevel() == 5){
-                        levelsDown = true;
+                    if (tablero.p2.topCollide(barra))
+                        tablero.p2.speed = 0.8;
+                    else if (tablero.p2.bottomCollide(barra)) {
+                        tablero.p2.speed = 0.01;
+                        tablero.p2.standUp = true;
+                        if (l.id >= 4) {
+                            levelsDown = true;
+                        }
                     }
                 }
-            }
+        }
             
             if(tablero.p1.topCollide(tablero.p2)){
             	tablero.p2.speed = 0.01;
@@ -161,8 +143,8 @@ public class MainThread extends Thread {
             // Update board
             if (levelsDown) {
                 tablero.levelsDown();
-                tablero.p1.posY -= 25;
-                tablero.p2.posY += 5;
+                tablero.p1.posY += 100;
+
             }
 
             tablero.repaint();
@@ -173,7 +155,5 @@ public class MainThread extends Thread {
 
             }
         }
-
-
     }
 }

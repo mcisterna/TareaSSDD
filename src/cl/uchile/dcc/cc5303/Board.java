@@ -57,10 +57,9 @@ public class Board extends Canvas {
 
 
     public void levelsDown() {
-    	levels.add(new Level(2));
+        levels.add(new Level(2));
         for(Level l : levels) {
         	l.moveDown();
-        
         }
         levels.remove();
         
