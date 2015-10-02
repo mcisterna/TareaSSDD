@@ -32,10 +32,13 @@ public class Board extends Canvas {
             buffer = img.getGraphics();
         }
 
+
+
         buffer.setColor(Color.black);
         buffer.fillRect(0, 0, getWidth(), getHeight());;
 
         buffer.setColor(Color.red);
+        buffer.drawString("hola", 400, 300);
         p1.draw(buffer);
         buffer.setColor(Color.blue);
         p2.draw(buffer);

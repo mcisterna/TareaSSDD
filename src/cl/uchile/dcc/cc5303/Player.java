@@ -10,10 +10,12 @@ public class Player {
     int posX, posY, w = 14, h = 20;
     double speed = 0.4;
     public boolean standUp = false;
+    int lifes;
 
-    public Player(int x, int y){
+    public Player(int x, int y, int lifes){
         this.posX = x;
-        this.posY = y;
+        this.posY = 600 -  y - this.h;
+        this.lifes = lifes;
     }
 
     public void jump(){

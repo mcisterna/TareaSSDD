@@ -3,8 +3,6 @@ import java.awt.Graphics;
 import java.util.LinkedList;
 import java.util.Random;
 
-
-
 public class Level {
 	
 	LinkedList<Bench> benches;
@@ -38,7 +36,7 @@ public class Level {
 		this.id--;
 		if(id == 3) staticId--;
 		for(Bench b : benches){
-			b.posY = 600 - id*100 - b.h;
+			b.posY += 100;
 		}
 	}
 	

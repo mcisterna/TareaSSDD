@@ -36,8 +36,8 @@ public class MainThread extends Thread {
 		}
 
         //Jugadores
-        player1 = new Player(WIDTH/3, 550);
-        player2 = new Player(2*WIDTH/3, 550);
+        player1 = new Player(WIDTH/3, 50, 3);
+        player2 = new Player(2*WIDTH/3, 50, 3);
 
         frame = new JFrame(TITLE);
         frame.setVisible(true);
@@ -97,6 +97,18 @@ public class MainThread extends Thread {
             if (keys[KeyEvent.VK_A]) {
             	if(!tablero.p2.leftCollide(tablero.p1))
             		tablero.p2.moveLeft();
+            }
+
+            if(tablero.p1.posY > tablero.levels.getFirst().benches.getFirst().bottom()) {
+                System.out.println(levels.size());
+                tablero.p1.lifes--;
+                if(tablero.p1.lifes != 0) {
+                    tablero.p1.posY = 0;
+                    tablero.p1.posX = 400;
+                }
+                else {
+                    //TODO: sacar player de la lista de players
+                }
             }
 
             //update players
