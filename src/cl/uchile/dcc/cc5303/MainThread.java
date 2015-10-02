@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -25,6 +26,8 @@ public class MainThread extends Thread {
     private Player player1, player2;
 
     int frames = new Random().nextInt(2 * framesToNewBench);
+    
+    LinkedList<Level> levels;
 
     private Bench[] benches = {
             new Bench(0, 800, 0),
@@ -46,6 +49,11 @@ public class MainThread extends Thread {
 
     public MainThread() {
         keys = new boolean[KeyEvent.KEY_LAST];
+        levels = new LinkedList<Level>();
+        for (int i = 0; i < 6; i++) {
+			Level l = new Level(2);
+			levels.add(l);
+		}
 
         //Jugadores
         player1 = new Player(WIDTH/3, 550);
@@ -86,7 +94,8 @@ public class MainThread extends Thread {
         while (true) { // Main loop
             //Check controls
             if (keys[KeyEvent.VK_UP]) {
-                tablero.p1.jump();
+            	if(!tablero.p1.topCollide(tablero.p2))
+            		tablero.p1.jump();
             }
             if (keys[KeyEvent.VK_RIGHT]) {
             	if(!tablero.p1.rightCollide(tablero.p2))
@@ -98,7 +107,8 @@ public class MainThread extends Thread {
             }
 
             if (keys[KeyEvent.VK_W]) {
-                tablero.p2.jump();
+            	if(!tablero.p2.topCollide(tablero.p1))
+            		tablero.p2.jump();
             }
             if (keys[KeyEvent.VK_D]) {
             	if(!tablero.p2.rightCollide(tablero.p1))
@@ -137,8 +147,12 @@ public class MainThread extends Thread {
                 }
             }
             
-            if(tablero.p1.collide(tablero.p2)){
-            	System.out.println("colide");
+            if(tablero.p1.topCollide(tablero.p2)){
+            	tablero.p2.speed = 0.01;
+                tablero.p2.standUp = true;
+            }
+            
+            if(tablero.p2.topCollide(tablero.p1)){
             	tablero.p1.speed = 0.01;
                 tablero.p1.standUp = true;
             }

@@ -12,13 +12,11 @@ public class Bench {
     int w, h;
     int level;
 
-    public Bench(int x, int width, int level){
+    public Bench(int x, int y, int width){
         this.w = width;
         this.h = 20;
         this.posX = x;
-        // level va desde 0 hasta 5 por vista, si es -1 o 6 sale de la vista.
-        this.level = level;
-        this.posY = 600 - level*100 - this.h;
+        this.posY = 600 - y - this.h;
     }
 
     public void draw(Graphics g){

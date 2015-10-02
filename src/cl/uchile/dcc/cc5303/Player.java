@@ -46,15 +46,19 @@ public class Player {
     }
 
     public boolean collide(Bench b){
-        return Math.abs(bottom() - b.top()) < 5 && right() <= b.right() && left() >= b.left();
+        return Math.abs(bottom() - b.top()) < 10 && right() <= b.right() && left() >= b.left();
     }
 
     public boolean hit(Bench b){
-        return Math.abs(top() - b.bottom()) < 5 && right() <= b.right() && left() >= b.left();
+        return Math.abs(top() - b.bottom()) < 10 && right() <= b.right() && left() >= b.left();
     }
     
-    public boolean collide(Player p){
-    	return Math.abs(top() - p.bottom()) < 5 && right() <= p.right() && left() >= p.left();
+    public boolean topCollide(Player p){
+    	return Math.abs(top() - p.bottom()) < 5 && Math.abs(right() - p.right()) < 10 && Math.abs(left() - p.left()) < 10;
+    }
+    
+    public boolean bottomCollide(Player p){
+    	return Math.abs(p.top() - bottom()) < 5 && Math.abs(right() - p.right()) < 10 && Math.abs(left() - p.left()) < 10;
     }
     
     public boolean rightCollide(Player p){

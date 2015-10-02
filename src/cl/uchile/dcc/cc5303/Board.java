@@ -2,6 +2,7 @@ package cl.uchile.dcc.cc5303;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -12,7 +13,7 @@ public class Board extends Canvas {
     public int width, height;
 
     public Player p1, p2;
-    public Bench[] bases;
+    public LinkedList<Level> levels;
     public Image img;
     public Graphics buffer;
 
@@ -40,8 +41,8 @@ public class Board extends Canvas {
         p2.draw(buffer);
 
         buffer.setColor(Color.white);
-        for(Bench base : bases){
-            base.draw(buffer);
+        for(Level l : levels){
+            l.draw(buffer);
         }
 
         g.drawImage(img, 0, 0, null);
@@ -54,14 +55,15 @@ public class Board extends Canvas {
         return ret;
     }
 
-    public void setBenches(Bench[] benches) {
-        this.bases = benches;
-    }
 
     public void levelsDown() {
-        for(Bench base: bases) {
-            base.levelDown();
+    	levels.add(new Level(2));
+        for(Level l : levels) {
+        	l.moveDown();
+        
         }
+        levels.remove();
+        
     }
 
 
