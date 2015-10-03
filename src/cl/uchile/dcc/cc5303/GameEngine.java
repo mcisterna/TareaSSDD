@@ -1,13 +1,15 @@
 package cl.uchile.dcc.cc5303;
 
+import cl.uchile.dcc.cc5303.elements.Bench;
+import cl.uchile.dcc.cc5303.elements.Level;
+import cl.uchile.dcc.cc5303.elements.Player;
+import cl.uchile.dcc.cc5303.interfaces.IServer;
+
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.LinkedList;
 
-/**
- * Created by jose on 10/2/15.
- */
 public class GameEngine {
 
     private final static String TITLE = "Juego - CC5303";
@@ -22,30 +24,19 @@ public class GameEngine {
 
         System.out.println("Iniciando Juego de SSDD...");
         players = new LinkedList<Player>();
+
         LinkedList<Level> levels;
-
-        Game game;
-
-
         levels = new LinkedList<Level>();
         for (int i = 0; i < 6; i++) {
             Level l = new Level(2);
             levels.add(l);
         }
 
-
-        game = new Game(WIDTH, HEIGHT, players);
+        Game game = new Game(players);
         game.levels = levels;
-        game.setSize(WIDTH, HEIGHT);
 
-
-        IGameEngine gameEngine = new Server(players, todosJuntos, game);
+        IServer gameEngine = new Server(players, todosJuntos, game);
         Naming.rebind(url, gameEngine);
-
-
-
-
-
 
         while (true) { // main loop
             for (Player player1 : players) {
@@ -65,11 +56,11 @@ public class GameEngine {
                     }
                 }
 
-                if (player1.posY > game.levels.getFirst().benches.getFirst().bottom()) {
-                    player1.lives--;
-                    if (player1.lives != 0) {
-                        player1.posY = 0;
-                        player1.posX = 400;
+                if (player1.getPosY() > game.levels.getFirst().getBenches().getFirst().bottom()) {
+                    player1.looseLife();;
+                    if (player1.getLives() != 0) {
+                        player1.setPosY(0);
+                        player1.setPosX(400);
                     } else {
                         //TODO: sacar player de la lista de players
                     }
@@ -83,12 +74,12 @@ public class GameEngine {
             //update barras
             boolean levelsDown = false;
             for (Level l : levels) {
-                for (Bench barra : l.benches) {
+                for (Bench barra : l.getBenches()) {
                     for (Player player : players) {
                         if (player.topCollide(barra))
-                            player.speed = 0.8;
+                            player.setSpeed(0.8);
                         else if (player.bottomCollide(barra)) {
-                            player.speed = 0.01;
+                            player.setSpeed(0.01);
                             player.standUp = true;
                             if (l.id >= 4) {
                                 levelsDown = true;
@@ -103,7 +94,7 @@ public class GameEngine {
                 for (Player player2 : players) {
                     if (player1 != player2) {
                         if (player1.topCollide(player2)) {
-                            player2.speed = 0.01;
+                            player2.setSpeed(0.01);
                             player2.standUp = true;
                         }
                     }
@@ -114,9 +105,10 @@ public class GameEngine {
             if (levelsDown) {
                 game.levelsDown();
                 for (Player player : players) {
-                    player.posY += 100;
+                    player.setPosY(player.getPosY() + 100);
                 }
             }
+
             try {
                 Thread.sleep(1000 / UPDATE_RATE);
             } catch (InterruptedException ex) {
