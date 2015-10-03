@@ -3,7 +3,6 @@ package cl.uchile.dcc.cc5303;
 
 import cl.uchile.dcc.cc5303.elements.Bench;
 import cl.uchile.dcc.cc5303.elements.Level;
-import cl.uchile.dcc.cc5303.elements.Player;
 import cl.uchile.dcc.cc5303.interfaces.IPlayer;
 
 import java.awt.*;
@@ -55,7 +54,7 @@ public class Renderer extends Canvas{
     }
 
     public void paint(IPlayer player) throws RemoteException {
-        buffer.fillRect(player.getPosX(), player.getPosY(), player.getWidth(), player.getHeight());
+        buffer.fillRect(player.getLeft(), player.getTop(), player.getWidth(), player.getHeight());
     }
 
     public void paint(Level level) {
