@@ -15,9 +15,9 @@ public interface IPlayer extends Remote{
     public void stopJumping() throws RemoteException;
     public void stopMovingRight() throws RemoteException;
     public void stopMovingLeft() throws RemoteException;
-    public Color getColor() throws RemoteException;
     public int getPosX() throws RemoteException;
     public int getPosY() throws RemoteException;
-    public int getHeight() throws RemoteException;
     public int getWidth() throws RemoteException;
+    public int getHeight() throws RemoteException;
+    public Color getColor() throws RemoteException;
 }
