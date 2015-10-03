@@ -1,14 +1,8 @@
 package cl.uchile.dcc.cc5303.elements;
 
-import java.awt.*;
 import java.io.Serializable;
-import java.util.Random;
 
-/**
- * Created by sebablasko on 9/11/15.
- * Modified by franchoco on 9/20/2015.
- */
-public class Bench{
+public class Bench implements Serializable{
     int posX, posY;
     int w, h;
 
@@ -50,7 +44,5 @@ public class Bench{
     public int getHeight() {
         return h;
     }
-
-
 
 }
