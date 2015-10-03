@@ -28,6 +28,7 @@ public class Client {
             player.startJumping();
 
             Renderer renderer = new Renderer(800, 600);//width y height del game engine
+            renderer.setSize(800, 600);
 
 
             JFrame frame = new JFrame("CLIENT");
@@ -51,7 +52,6 @@ public class Client {
                 }
             });
 
-            renderer.setSize(800, 600);
 
             while (true) {
 

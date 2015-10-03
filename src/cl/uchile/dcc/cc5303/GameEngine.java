@@ -42,8 +42,9 @@ public class GameEngine {
             for (Player player1 : players) {
                 for (Player player2 : players){
                     if (player1.jumping) {
-                        if (!player1.topCollide(player2))
+                        if (!player1.topCollide(player2)) {
                             player1.jump();
+                        }
                     }
 
                     if (player1.movingRight) {
