@@ -1,11 +1,16 @@
 package cl.uchile.dcc.cc5303;
 
 
+import cl.uchile.dcc.cc5303.elements.Player;
+import cl.uchile.dcc.cc5303.interfaces.IGame;
+import cl.uchile.dcc.cc5303.interfaces.IPlayer;
+import cl.uchile.dcc.cc5303.interfaces.IServer;
+
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 
-public class Server extends UnicastRemoteObject implements IGameEngine{
+public class Server extends UnicastRemoteObject implements IServer {
 
     List<Player> players;
     boolean todosJuntos;
@@ -31,7 +36,7 @@ public class Server extends UnicastRemoteObject implements IGameEngine{
     }
 
     @Override
-    public IGame getBoard() throws RemoteException {
+    public IGame getGame() throws RemoteException {
         return game;
     }
 }
