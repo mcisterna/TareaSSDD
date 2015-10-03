@@ -17,9 +17,6 @@ public class Client {
 
         IGameEngine gameEngine = (IGameEngine) Naming.lookup(Server.url);
         IPlayer player  = gameEngine.joinGame();
-
-        while(true) {
-                player.startJumping();
-        }
+        player.startJumping();
     }
 }
