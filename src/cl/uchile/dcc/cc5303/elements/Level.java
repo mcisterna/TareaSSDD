@@ -1,11 +1,10 @@
 package cl.uchile.dcc.cc5303.elements;
-import cl.uchile.dcc.cc5303.elements.Bench;
 
-import java.rmi.Remote;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.Random;
 
-public class Level implements Remote {
+public class Level implements Serializable{
 	
 	LinkedList<Bench> benches;
 	public int id;
@@ -34,6 +33,10 @@ public class Level implements Remote {
 		for(Bench b : benches){
 			b.posY += 100;
 		}
+	}
+
+	public LinkedList<Bench> getBenches() {
+		return benches;
 	}
 	
 	
