@@ -13,15 +13,12 @@ import java.util.List;
 
 public class Game extends UnicastRemoteObject implements IGame {
 
-    public List<IPlayer> players;
+    public List<Player> players;
     public LinkedList<Level> levels;
 
     public Game(List<Player> players) throws RemoteException {
         super();
-        this.players = new LinkedList<>();
-        for(IPlayer player : players) {
-            this.players.add(player);
-        }
+        this.players = players;
     }
 
     public void levelsDown() {
@@ -31,7 +28,13 @@ public class Game extends UnicastRemoteObject implements IGame {
     }
 
     public List<IPlayer> getPlayers() throws RemoteException{
-        return players;
+
+        LinkedList<IPlayer> iplayers = new LinkedList<>();
+        for(IPlayer player : players) {
+            iplayers.add(player);
+        }
+
+        return iplayers;
     }
 
     public List<Level> getLevels() throws RemoteException{
