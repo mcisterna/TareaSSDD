@@ -21,10 +21,14 @@ public class Game extends UnicastRemoteObject implements IGame {
         this.players = players;
     }
 
-    public void levelsDown() {
+    public void moveStageDown() {
         levels.add(new Level(2));
         for(Level l : levels) l.moveDown();
         levels.remove();
+
+        for (Player player : players) {
+            player.setPosY(player.getTop() + 100);
+        }
     }
 
     public List<IPlayer> getPlayers() throws RemoteException{

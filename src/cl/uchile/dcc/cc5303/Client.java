@@ -56,7 +56,6 @@ public class Client {
             while (true) {
 
                 if (keys[KeyEvent.VK_UP]) {
-                    System.out.println("jump!");
                     player.startJumping();
                 }
                 else {
