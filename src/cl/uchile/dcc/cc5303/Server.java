@@ -50,12 +50,13 @@ public class Server {
         tablero.setSize(WIDTH, HEIGHT);
 
         while (true) { // main loop
-
+            System.out.println("loop");
             for (Player player1 : players) {
 
                 for (Player player2 : players)
                     if (player1 != player2) {
                         if (player1.jumping) {
+                            System.out.println("jumping");
                             if (!player1.topCollide(player2))
                                 player1.jump();
                         }

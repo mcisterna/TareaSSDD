@@ -11,16 +11,12 @@ import java.rmi.RemoteException;
  */
 public class Client {
 
-    static public void main() throws RemoteException, NotBoundException, MalformedURLException {
-        boolean[] keys;
-        keys = new boolean[KeyEvent.KEY_LAST];
+    static public void main(String[] args) throws RemoteException, NotBoundException, MalformedURLException {
+    //    boolean[] keys;
+    //    keys = new boolean[KeyEvent.KEY_LAST];
 
         IGameEngine gameEngine = (IGameEngine) Naming.lookup(Server.url);
         IPlayer player  = gameEngine.joinGame();
-
-        if(player == null){
-
-        }
 
         while(true) {
                 player.startJumping();
