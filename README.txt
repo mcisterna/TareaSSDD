@@ -1,6 +1,7 @@
 Instrucciones para ejecutar:
 	- unset CLASSPATH
-	- Djava.rmi.server.codebase=file:///path/a/los/archivos.class
+	- rmiregistry &
+	- java -Djava.rmi.server.codebase=file:///path/a/los/archivos.class
 
 	Servidor:
 		ejecutar GameEngine (java path/a/gameengine)
