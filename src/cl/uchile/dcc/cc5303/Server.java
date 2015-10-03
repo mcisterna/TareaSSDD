@@ -50,25 +50,22 @@ public class Server {
         tablero.setSize(WIDTH, HEIGHT);
 
         while (true) { // main loop
-            System.out.println("loop");
             for (Player player1 : players) {
-
-                for (Player player2 : players)
-                    if (player1 != player2) {
-                        if (player1.jumping) {
-                            System.out.println("jumping");
-                            if (!player1.topCollide(player2))
-                                player1.jump();
-                        }
-                        if (player1.movingRight) {
-                            if (!player1.rightCollide(player2))
-                                player1.moveRight();
-                        }
-                        if (player1.movingLeft) {
-                            if (!player1.leftCollide(player2))
-                                player1.moveLeft();
-                        }
+                for (Player player2 : players){
+                    if (player1.jumping) {
+                        if (!player1.topCollide(player2))
+                            player1.jump();
                     }
+
+                    if (player1.movingRight) {
+                        if (!player1.rightCollide(player2))
+                            player1.moveRight();
+                    }
+                    if (player1.movingLeft) {
+                        if (!player1.leftCollide(player2))
+                            player1.moveLeft();
+                    }
+                }
 
                 if (player1.posY > tablero.levels.getFirst().benches.getFirst().bottom()) {
                     player1.lifes--;
