@@ -25,15 +25,15 @@ public class Client {
         }
         else {
             IGame game = gameEngine.getGame();
-            player.startJumping();
 
-            Renderer renderer = new Renderer(800, 600);//width y height del game engine
-            renderer.setSize(800, 600);
 
 
             JFrame frame = new JFrame("CLIENT");
             frame.setVisible(true);
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            Renderer renderer = new Renderer(800, 600);//width y height del game engine
+            renderer.setSize(800, 600);
+
             frame.add(renderer);
             frame.pack();
             frame.addKeyListener(new KeyListener() {
@@ -56,6 +56,7 @@ public class Client {
             while (true) {
 
                 if (keys[KeyEvent.VK_UP]) {
+                    System.out.println("jump!");
                     player.startJumping();
                 }
                 else {
@@ -82,6 +83,7 @@ public class Client {
 
                 }
 
+                frame.requestFocus();
             }
         }
     }

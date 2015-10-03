@@ -4,9 +4,6 @@ import java.awt.*;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
-/**
- * Created by jose on 10/2/15.
- */
 public interface IPlayer extends Remote{
 
     public void startJumping() throws RemoteException;
