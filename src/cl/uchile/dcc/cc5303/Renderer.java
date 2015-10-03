@@ -51,8 +51,6 @@ public class Renderer extends Canvas{
             paint(l);
         }
 
-        buffer.setColor(Color.CYAN);
-
         g.drawImage(img, 0, 0, null);
     }
 
