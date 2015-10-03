@@ -1,24 +1,24 @@
 package cl.uchile.dcc.cc5303;
 
 import java.awt.*;
-import java.util.ArrayList;
+import java.rmi.RemoteException;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Created by sebablasko on 9/11/15.
  */
-public class Board extends Canvas {
+public class Game extends Canvas implements IBoard{
 
     public int width, height;
 
-    public List<Player> players;
+    public List<IPlayer> players;
     public LinkedList<Level> levels;
     public Color[] playerColors = {Color.red, Color.blue, Color.green, Color.cyan};
     public Image img;
     public Graphics buffer;
 
-    public Board(int w, int h, List players){
+    public Game(int w, int h, List players){
         this.width = w;
         this.height = h;
         this.players = players;
@@ -40,7 +40,11 @@ public class Board extends Canvas {
         for(int i = 0; i<players.size(); i++) {
 
             buffer.setColor(playerColors[i]);
-            players.get(i).draw(buffer);
+            try {
+                players.get(i).draw(buffer);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
 
         }
 

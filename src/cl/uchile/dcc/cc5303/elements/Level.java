@@ -1,9 +1,11 @@
-package cl.uchile.dcc.cc5303;
-import java.awt.Graphics;
+package cl.uchile.dcc.cc5303.elements;
+import cl.uchile.dcc.cc5303.elements.Bench;
+
+import java.rmi.Remote;
 import java.util.LinkedList;
 import java.util.Random;
 
-public class Level {
+public class Level implements Remote {
 	
 	LinkedList<Bench> benches;
 	public int id;
@@ -25,13 +27,7 @@ public class Level {
 		}
 
 	}
-	
-	public void draw(Graphics g){
-		for(Bench b : benches){
-			 g.fillRect(b.posX, b.posY, b.w, b.h);
-		}
-	}
-	
+
 	public void moveDown(){
 		this.id--;
 		if(id == 3) staticId--;

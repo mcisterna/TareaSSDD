@@ -1,36 +1,129 @@
 package cl.uchile.dcc.cc5303;
 
-
+import java.net.MalformedURLException;
+import java.rmi.Naming;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
-import java.util.List;
+import java.util.LinkedList;
 
-public class GameEngine extends UnicastRemoteObject implements IGameEngine{
+/**
+ * Created by jose on 10/2/15.
+ */
+public class GameEngine {
 
-    List<Player> players;
-    boolean todosJuntos;
+    private final static String TITLE = "Juego - CC5303";
+    private final static int WIDTH = 800, HEIGHT = 600;
+    private final static int UPDATE_RATE = 60;
+    private final static int DX = 5;
+    static boolean todosJuntos = false;
+    static LinkedList<Player> players;
+    public static String url = "rmi://localhost:1099/game";
 
-    public GameEngine(List<Player> players, boolean todosJuntos) throws RemoteException {
-        super();
-        this.players = players;
-        this.todosJuntos = todosJuntos;
-    }
+    public static void main(String[] args) throws MalformedURLException, RemoteException {
+
+        System.out.println("Iniciando Juego de SSDD...");
+        players = new LinkedList<Player>();
+        LinkedList<Level> levels;
+
+        Game game;
 
 
-    public IPlayer joinGame() throws RemoteException {
-
-        Player player;
-
-        if(todosJuntos || Player.playerCounter == 0) {
-            player = new Player(Player.playerCounter*150, 50, 3);
-
+        levels = new LinkedList<Level>();
+        for (int i = 0; i < 6; i++) {
+            Level l = new Level(2);
+            levels.add(l);
         }
-        else {
-            player = new Player(400, 0, 3);
+
+
+        game = new Game(WIDTH, HEIGHT, players);
+        game.levels = levels;
+        game.setSize(WIDTH, HEIGHT);
+
+
+        IGameEngine gameEngine = new Server(players, todosJuntos, game);
+        Naming.rebind(url, gameEngine);
+
+
+
+
+
+
+        while (true) { // main loop
+            for (Player player1 : players) {
+                for (Player player2 : players){
+                    if (player1.jumping) {
+                        if (!player1.topCollide(player2))
+                            player1.jump();
+                    }
+
+                    if (player1.movingRight) {
+                        if (!player1.rightCollide(player2))
+                            player1.moveRight();
+                    }
+                    if (player1.movingLeft) {
+                        if (!player1.leftCollide(player2))
+                            player1.moveLeft();
+                    }
+                }
+
+                if (player1.posY > game.levels.getFirst().benches.getFirst().bottom()) {
+                    player1.lives--;
+                    if (player1.lives != 0) {
+                        player1.posY = 0;
+                        player1.posX = 400;
+                    } else {
+                        //TODO: sacar player de la lista de players
+                    }
+                }
+
+                for (Player player : players)
+                    player.update(DX);
+
+            }
+
+            //update barras
+            boolean levelsDown = false;
+            for (Level l : levels) {
+                for (Bench barra : l.benches) {
+                    for (Player player : players) {
+                        if (player.topCollide(barra))
+                            player.speed = 0.8;
+                        else if (player.bottomCollide(barra)) {
+                            player.speed = 0.01;
+                            player.standUp = true;
+                            if (l.id >= 4) {
+                                levelsDown = true;
+                            }
+                        }
+                    }
+
+                }
+            }
+
+            for (Player player1 : players) {
+                for (Player player2 : players) {
+                    if (player1 != player2) {
+                        if (player1.topCollide(player2)) {
+                            player2.speed = 0.01;
+                            player2.standUp = true;
+                        }
+                    }
+                }
+            }
+
+            // Update board
+            if (levelsDown) {
+                game.levelsDown();
+                for (Player player : players) {
+                    player.posY += 100;
+                }
+            }
+            try {
+                Thread.sleep(1000 / UPDATE_RATE);
+            } catch (InterruptedException ex) {
+
+            }
         }
-        players.add(player);
-        return player;
+
+
     }
-
-
 }

@@ -1,5 +1,6 @@
-package cl.uchile.dcc.cc5303;
+package cl.uchile.dcc.cc5303.interfaces;
 
+import java.awt.*;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
@@ -14,4 +15,9 @@ public interface IPlayer extends Remote{
     public void stopJumping() throws RemoteException;
     public void stopMovingRight() throws RemoteException;
     public void stopMovingLeft() throws RemoteException;
+    public Color getColor() throws RemoteException;
+    public int getPosX() throws RemoteException;
+    public int getPosY() throws RemoteException;
+    public int getHeight() throws RemoteException;
+    public int getWidth() throws RemoteException;
 }

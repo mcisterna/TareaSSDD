@@ -1,13 +1,14 @@
-package cl.uchile.dcc.cc5303;
+package cl.uchile.dcc.cc5303.elements;
 
 import java.awt.*;
+import java.io.Serializable;
 import java.util.Random;
 
 /**
  * Created by sebablasko on 9/11/15.
  * Modified by franchoco on 9/20/2015.
  */
-public class Bench {
+public class Bench{
     int posX, posY;
     int w, h;
 
@@ -16,10 +17,6 @@ public class Bench {
         this.h = 20;
         this.posX = x;
         this.posY = 600 - y - this.h;
-    }
-
-    public void draw(Graphics g){
-        g.fillRect(this.posX, this.posY, this.w, this.h);
     }
 
     public int top() {
@@ -36,6 +33,22 @@ public class Bench {
 
     public int right() {
         return this.posX + this.w;
+    }
+
+    public int getPosX() {
+        return posX;
+    }
+
+    public int getPosY() {
+        return posY;
+    }
+
+    public int getWidth() {
+        return w;
+    }
+
+    public int getHeight() {
+        return h;
     }
 
 

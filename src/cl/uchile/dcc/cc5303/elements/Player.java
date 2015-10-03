@@ -1,4 +1,6 @@
-package cl.uchile.dcc.cc5303;
+package cl.uchile.dcc.cc5303.elements;
+
+import cl.uchile.dcc.cc5303.interfaces.IPlayer;
 
 import java.awt.*;
 import java.rmi.RemoteException;
@@ -10,17 +12,20 @@ import java.rmi.server.UnicastRemoteObject;
 public class Player extends UnicastRemoteObject implements IPlayer {
 
     static int playerCounter= 0;
+    static public Color[] playerColors = {Color.red, Color.blue, Color.green, Color.cyan};
     int posX, posY, w = 14, h = 20;
     double speed = 0.4;
     public boolean standUp = false;
-    int lifes;
+    int lives;
+    Color color;
     public boolean movingRight, movingLeft, jumping;
 
-    public Player(int x, int y, int lifes) throws RemoteException {
+    public Player(int x, int y, int lives) throws RemoteException {
         super();
         this.posX = x;
         this.posY = 600 -  y - this.h;
-        this.lifes = lifes;
+        this.lives = lives;
+        this.color = playerColors[playerCounter];
         playerCounter++;
         movingLeft = false;
         movingRight = false;
@@ -69,6 +74,11 @@ public class Player extends UnicastRemoteObject implements IPlayer {
     @Override
     public void stopMovingLeft() throws RemoteException {
         movingLeft = false;
+    }
+
+    @Override
+    public Color getColor() throws RemoteException {
+        return color;
     }
 
     public void update(int dx){
@@ -136,5 +146,18 @@ public class Player extends UnicastRemoteObject implements IPlayer {
 
     public int right() {
         return this.posX + this.w;
+    }
+
+    public int getPosX() throws RemoteException {
+        return posX;
+    }
+    public int getPosY() throws RemoteException {
+        return posY;
+    }
+    public int getHeight() throws RemoteException{
+        return h;
+    }
+    public int getWidth() throws RemoteException{
+        return w;
     }
 }
