@@ -5,6 +5,7 @@ import cl.uchile.dcc.cc5303.interfaces.IPlayer;
 import java.awt.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.List;
 
 public class Player extends UnicastRemoteObject implements IPlayer {
 
@@ -12,10 +13,10 @@ public class Player extends UnicastRemoteObject implements IPlayer {
     static public Color[] playerColors = {Color.red, Color.blue, Color.green, Color.cyan};
     int posX, posY, w = 14, h = 20;
     double speed = 0.4;
-    public boolean standUp = false;
+    public boolean isStandingUp = false;
     int lives;
     Color color;
-    public boolean movingRight, movingLeft, jumping;
+    public boolean wantsToMoveRight, wantsToMoveLeft, wantsToJump;
 
     public Player(int x, int y, int lives) throws RemoteException {
         super();
@@ -24,15 +25,15 @@ public class Player extends UnicastRemoteObject implements IPlayer {
         this.lives = lives;
         this.color = playerColors[playerCounter];
         playerCounter++;
-        movingLeft = false;
-        movingRight = false;
-        jumping = false;
+        wantsToMoveLeft = false;
+        wantsToMoveRight = false;
+        wantsToJump = false;
     }
 
     public void jump(){
-        if(this.standUp)
+        if(this.isStandingUp)
             this.speed = -0.9;
-        this.standUp = false;
+        this.isStandingUp = false;
     }
 
     public void moveRight() {
@@ -45,32 +46,32 @@ public class Player extends UnicastRemoteObject implements IPlayer {
 
     @Override
     public void startJumping() throws RemoteException {
-        jumping = true;
+        wantsToJump = true;
     }
 
     @Override
     public void startMovingRight() throws RemoteException {
-        movingRight = true;
+        wantsToMoveRight = true;
     }
 
     @Override
     public void startMovingLeft() throws RemoteException {
-        movingLeft = true;
+        wantsToMoveLeft = true;
     }
 
     @Override
     public void stopJumping() throws RemoteException {
-        jumping = false;
+        wantsToJump = false;
     }
 
     @Override
     public void stopMovingRight() throws RemoteException {
-        movingRight = false;
+        wantsToMoveRight = false;
     }
 
     @Override
     public void stopMovingLeft() throws RemoteException {
-        movingLeft = false;
+        wantsToMoveLeft = false;
     }
 
     public Color getColor() throws RemoteException {
@@ -80,7 +81,6 @@ public class Player extends UnicastRemoteObject implements IPlayer {
     public void update(int dx){
         this.posY += this.speed*dx;
         this.speed += this.speed < 0.8 ? 0.02: 0;
-        this.standUp = (this.speed == 0);
     }
 
     public void draw(Graphics g){
@@ -92,47 +92,81 @@ public class Player extends UnicastRemoteObject implements IPlayer {
         return "player: position ("+this.posX+","+this.posY+")";
     }
 
-    public boolean bottomCollide(Bench b){
-        return Math.abs(bottom() - b.top()) < 10 && right() <= b.right() && left() >= b.left();
+    public boolean isBottomCollidingWith(Bench b){
+        return Math.abs(bottom() - b.top()) < 10 && getRight() <= b.right() && getLeft() >= b.left();
     }
 
-    public boolean topCollide(Bench b){
-        return Math.abs(top() - b.bottom()) < 10 && right() <= b.right() && left() >= b.left();
+    public boolean isTopCollidingWith(Bench b){
+        return Math.abs(getTop() - b.bottom()) < 10 && getRight() <= b.right() && getLeft() >= b.left();
     }
     
-    public boolean topCollide(Player p){
-    	return Math.abs(top() - p.bottom()) < 5 && Math.abs(right() - p.right()) < 10 && Math.abs(left() - p.left()) < 10;
+    public boolean isTopCollidingWith(Player p){
+    	return Math.abs(getTop() - p.bottom()) < 5 && Math.abs(getRight() - p.getRight()) < 10 && Math.abs(getLeft() - p.getLeft()) < 10;
     }
 
-    public boolean rightCollide(Player p){
-    	boolean right = (Math.abs(right() - p.left()) < 5);
-    	boolean m = Math.abs(top() - p.top()) < 20;
+    public boolean isBottomCollidingWith(Player p){
+        return Math.abs(bottom() - p.getTop()) < 5 && Math.abs(getRight() - p.getRight()) < 10 && Math.abs(getLeft() - p.getLeft()) < 10;
+    }
+
+    public boolean isRightCollidingWith(Player p){
+    	boolean right = (Math.abs(getRight() - p.getLeft()) < 5);
+    	boolean m = Math.abs(getTop() - p.getTop()) < 20;
     	return right && m;
     }
+
+    public boolean isRightCollidingWith(List<Player> otherPlayers) {
+        for(Player otherPlayer : otherPlayers) {
+            if (isRightCollidingWith(otherPlayer)) return true;
+        }
+
+        return false;
+    }
+
+    public boolean isLeftCollidingWith(List<Player> otherPlayers) {
+        for(Player otherPlayer : otherPlayers) {
+            if (isLeftCollidingWith(otherPlayer)) return true;
+        }
+
+        return false;
+    }
+
+    public boolean isBottomCollidingWith(List<Player> otherPlayers) {
+        for(Player otherPlayer : otherPlayers) {
+            if (otherPlayer != this && isBottomCollidingWith(otherPlayer)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    public boolean isTopCollidingWith(List<Player> otherPlayers) {
+        for(Player otherPlayer : otherPlayers) {
+            if (isTopCollidingWith(otherPlayer)) return true;
+        }
+
+        return false;
+    }
     
-    public boolean leftCollide(Player p){
-    	boolean left = (Math.abs(p.right() - left()) < 5);
-    	boolean m = Math.abs(top() - p.top()) < 20;
+    public boolean isLeftCollidingWith(Player p){
+    	boolean left = (Math.abs(p.getRight() - getLeft()) < 5);
+    	boolean m = Math.abs(getTop() - p.getTop()) < 20;
     	return left && m;
     }
 
-    public boolean rightCollide(Bench p){
-        boolean right = (Math.abs(right() - p.left()) < 5);
-        boolean m = Math.abs(top() - p.top()) < 20;
+    public boolean isRightCollidingWith(Bench p){
+        boolean right = (Math.abs(getRight() - p.left()) < 5);
+        boolean m = Math.abs(getTop() - p.top()) < 20;
         return right && m;
     }
 
-    public boolean leftCollide(Bench p){
-        boolean left = (Math.abs(p.right() - left()) < 5);
-        boolean m = Math.abs(top() - p.top()) < 20;
+    public boolean isLeftCollidingWith(Bench p){
+        boolean left = (Math.abs(p.right() - getLeft()) < 5);
+        boolean m = Math.abs(getTop() - p.top()) < 20;
         return left && m;
     }
 
-    public int top() {
-        return this.posY;
-    }
-
-    public int left() {
+    public int getLeft() {
         return this.posX;
     }
 
@@ -140,14 +174,11 @@ public class Player extends UnicastRemoteObject implements IPlayer {
         return this.posY + this.h;
     }
 
-    public int right() {
+    public int getRight() {
         return this.posX + this.w;
     }
 
-    public int getPosX() {
-        return posX;
-    }
-    public int getPosY() {
+    public int getTop() {
         return posY;
     }
     public int getHeight() {
