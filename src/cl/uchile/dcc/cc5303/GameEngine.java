@@ -39,38 +39,37 @@ public class GameEngine {
         Naming.rebind(url, gameEngine);
 
         while (true) { // main loop
-            for (Player player1 : players) {
-                for (Player player2 : players){
-                    if (player1.jumping) {
-                        if (!player1.topCollide(player2)) {
-                            player1.jump();
-                        }
-                    }
 
-                    if (player1.movingRight) {
-                        if (!player1.rightCollide(player2))
-                            player1.moveRight();
-                    }
-                    if (player1.movingLeft) {
-                        if (!player1.leftCollide(player2))
-                            player1.moveLeft();
+            for (Player player : players) {
+                if (player.jumping) {
+                    if (!playerTopCollision(player)) {
+                        player.jump();
                     }
                 }
 
-                if (player1.getPosY() > game.levels.getFirst().getBenches().getFirst().bottom()) {
-                    player1.looseLife();;
-                    if (player1.getLives() != 0) {
-                        player1.setPosY(0);
-                        player1.setPosX(400);
+                if (player.movingRight) {
+                    if (!playerRightCollision(player))
+                        player.moveRight();
+                }
+                if (player.movingLeft) {
+                    if (!playerLeftCollision(player))
+                        player.moveLeft();
+                }
+
+                if (player.getPosY() > game.levels.getFirst().getBenches().getFirst().bottom()) {
+                    player.looseLife();
+                    ;
+                    if (player.getLives() != 0) {
+                        player.setPosY(0);
+                        player.setPosX(400);
                     } else {
                         //TODO: sacar player de la lista de players
                     }
                 }
-
-                for (Player player : players)
-                    player.update(DX);
-
             }
+
+            for (Player player : players)
+                player.update(DX);
 
             //update barras
             boolean levelsDown = false;
@@ -82,7 +81,7 @@ public class GameEngine {
                         else if (player.bottomCollide(barra)) {
                             player.setSpeed(0.01);
                             player.standUp = true;
-                            if (l.id >= 4) {
+                            if (l.id == 4) {
                                 levelsDown = true;
                             }
                         }
@@ -119,4 +118,30 @@ public class GameEngine {
 
 
     }
+
+    static public boolean playerTopCollision(Player player) {
+        for(Player otherPlayer : players) {
+            if(player.topCollide(otherPlayer)) return true;
+        }
+
+        return false;
+    }
+
+    static public boolean playerRightCollision(Player player) {
+        for(Player otherPlayer : players) {
+            if(player.rightCollide(otherPlayer)) return true;
+        }
+
+        return false;
+    }
+
+    static public boolean playerLeftCollision(Player player) {
+        for(Player otherPlayer : players) {
+            if(player.leftCollide(otherPlayer)) return true;
+        }
+
+        return false;
+    }
+
+
 }
