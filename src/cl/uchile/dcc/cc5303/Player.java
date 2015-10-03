@@ -1,21 +1,30 @@
 package cl.uchile.dcc.cc5303;
 
 import java.awt.*;
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 
 /**
  * Created by sebablasko on 9/11/15.
  */
-public class Player {
+public class Player extends UnicastRemoteObject implements IPlayer {
 
+    static int playerCounter= 0;
     int posX, posY, w = 14, h = 20;
     double speed = 0.4;
     public boolean standUp = false;
     int lifes;
+    public boolean movingRight, movingLeft, jumping;
 
-    public Player(int x, int y, int lifes){
+    public Player(int x, int y, int lifes) throws RemoteException {
+        super();
         this.posX = x;
         this.posY = 600 -  y - this.h;
         this.lifes = lifes;
+        playerCounter++;
+        movingLeft = false;
+        movingRight = false;
+        jumping = false;
     }
 
     public void jump(){
@@ -30,6 +39,36 @@ public class Player {
 
     public void moveLeft() {
         this.posX -= 2;
+    }
+
+    @Override
+    public void startJumping() throws RemoteException {
+        jumping = true;
+    }
+
+    @Override
+    public void startMovingRight() throws RemoteException {
+        movingRight = true;
+    }
+
+    @Override
+    public void startMovingLeft() throws RemoteException {
+        movingLeft = true;
+    }
+
+    @Override
+    public void stopJumping() throws RemoteException {
+        jumping = false;
+    }
+
+    @Override
+    public void stopMovingRight() throws RemoteException {
+        movingRight = false;
+    }
+
+    @Override
+    public void stopMovingLeft() throws RemoteException {
+        movingLeft = false;
     }
 
     public void update(int dx){

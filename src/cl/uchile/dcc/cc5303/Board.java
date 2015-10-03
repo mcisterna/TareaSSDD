@@ -12,14 +12,16 @@ public class Board extends Canvas {
 
     public int width, height;
 
-    public Player p1, p2;
+    public List<Player> players;
     public LinkedList<Level> levels;
+    public Color[] playerColors = {Color.red, Color.blue, Color.green, Color.cyan};
     public Image img;
     public Graphics buffer;
 
-    public Board(int w, int h){
+    public Board(int w, int h, List players){
         this.width = w;
         this.height = h;
+        this.players = players;
     }
 
     @Override
@@ -32,16 +34,15 @@ public class Board extends Canvas {
             buffer = img.getGraphics();
         }
 
-
-
         buffer.setColor(Color.black);
         buffer.fillRect(0, 0, getWidth(), getHeight());;
 
-        buffer.setColor(Color.red);
-        buffer.drawString("hola", 400, 300);
-        p1.draw(buffer);
-        buffer.setColor(Color.blue);
-        p2.draw(buffer);
+        for(int i = 0; i<players.size(); i++) {
+
+            buffer.setColor(playerColors[i]);
+            players.get(i).draw(buffer);
+
+        }
 
         buffer.setColor(Color.white);
         for(Level l : levels){
@@ -51,21 +52,12 @@ public class Board extends Canvas {
         g.drawImage(img, 0, 0, null);
     }
 
-    @Override
-    public String toString(){
-        String ret = "Tablero: dimensions " + this.width + "x" + this.height + "\n";
-        ret += p1.toString() + "\n" + p2.toString();
-        return ret;
-    }
-
-
     public void levelsDown() {
         levels.add(new Level(2));
         for(Level l : levels) {
         	l.moveDown();
         }
         levels.remove();
-        
     }
 
 
