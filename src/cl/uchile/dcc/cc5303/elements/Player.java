@@ -6,12 +6,9 @@ import java.awt.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
-/**
- * Created by sebablasko on 9/11/15.
- */
 public class Player extends UnicastRemoteObject implements IPlayer {
 
-    static int playerCounter= 0;
+    public static int playerCounter= 0;
     static public Color[] playerColors = {Color.red, Color.blue, Color.green, Color.cyan};
     int posX, posY, w = 14, h = 20;
     double speed = 0.4;
@@ -76,7 +73,6 @@ public class Player extends UnicastRemoteObject implements IPlayer {
         movingLeft = false;
     }
 
-    @Override
     public Color getColor() throws RemoteException {
         return color;
     }
@@ -148,16 +144,35 @@ public class Player extends UnicastRemoteObject implements IPlayer {
         return this.posX + this.w;
     }
 
-    public int getPosX() throws RemoteException {
+    public int getPosX() {
         return posX;
     }
-    public int getPosY() throws RemoteException {
+    public int getPosY() {
         return posY;
     }
-    public int getHeight() throws RemoteException{
+    public int getHeight() {
         return h;
     }
-    public int getWidth() throws RemoteException{
+    public int getWidth() {
         return w;
+    }
+
+    public void setPosX(int x) {
+        this.posX = x;
+    }
+    public void setPosY(int y) {
+        this.posY = y;
+    }
+
+    public void setSpeed(double speed) {
+        this.speed = speed;
+    }
+
+    public int getLives() {
+        return lives;
+    }
+
+    public void  looseLife() {
+        lives--;
     }
 }
