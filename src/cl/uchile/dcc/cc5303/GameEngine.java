@@ -41,24 +41,15 @@ public class GameEngine {
         while (true) { // main loop
 
             for (Player player : players) {
-                if (player.jumping) {
-                    if (!playerTopCollision(player)) {
-                        player.jump();
-                    }
-                }
 
-                if (player.movingRight) {
-                    if (!playerRightCollision(player))
-                        player.moveRight();
-                }
-                if (player.movingLeft) {
-                    if (!playerLeftCollision(player))
-                        player.moveLeft();
-                }
+                if (player.wantsToJump && !player.isTopCollidingWith(players)) player.jump();
+                if (player.wantsToMoveRight && !player.isRightCollidingWith(players)) player.moveRight();
+                if (player.wantsToMoveLeft && !player.isLeftCollidingWith(players)) player.moveLeft();
 
-                if (player.getPosY() > game.levels.getFirst().getBenches().getFirst().bottom()) {
+
+
+                if (player.getTop() > game.levels.getFirst().getBenches().getFirst().bottom()) {
                     player.looseLife();
-                    ;
                     if (player.getLives() != 0) {
                         player.setPosY(0);
                         player.setPosX(400);
@@ -71,43 +62,29 @@ public class GameEngine {
             for (Player player : players)
                 player.update(DX);
 
-            //update barras
-            boolean levelsDown = false;
+            boolean needNextLevel = false;
             for (Level l : levels) {
                 for (Bench barra : l.getBenches()) {
                     for (Player player : players) {
-                        if (player.topCollide(barra))
+                        if (player.isTopCollidingWith(barra))
                             player.setSpeed(0.8);
-                        else if (player.bottomCollide(barra)) {
+                        else if (player.isBottomCollidingWith(barra)) {
                             player.setSpeed(0.01);
-                            player.standUp = true;
+                            player.isStandingUp = true;
                             if (l.id == 4) {
-                                levelsDown = true;
+                                needNextLevel = true;
                             }
                         }
-                    }
-
-                }
-            }
-
-            for (Player player1 : players) {
-                for (Player player2 : players) {
-                    if (player1 != player2) {
-                        if (player1.topCollide(player2)) {
-                            player2.setSpeed(0.01);
-                            player2.standUp = true;
+                        if (player.isBottomCollidingWith(players)) {
+                            player.setSpeed(0.01);
+                            player.isStandingUp =true;
                         }
                     }
+
                 }
             }
 
-            // Update board
-            if (levelsDown) {
-                game.levelsDown();
-                for (Player player : players) {
-                    player.setPosY(player.getPosY() + 100);
-                }
-            }
+            if (needNextLevel) game.moveStageDown();
 
             try {
                 Thread.sleep(1000 / UPDATE_RATE);
@@ -118,30 +95,4 @@ public class GameEngine {
 
 
     }
-
-    static public boolean playerTopCollision(Player player) {
-        for(Player otherPlayer : players) {
-            if(player.topCollide(otherPlayer)) return true;
-        }
-
-        return false;
-    }
-
-    static public boolean playerRightCollision(Player player) {
-        for(Player otherPlayer : players) {
-            if(player.rightCollide(otherPlayer)) return true;
-        }
-
-        return false;
-    }
-
-    static public boolean playerLeftCollision(Player player) {
-        for(Player otherPlayer : players) {
-            if(player.leftCollide(otherPlayer)) return true;
-        }
-
-        return false;
-    }
-
-
 }
