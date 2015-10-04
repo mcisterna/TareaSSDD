@@ -1,8 +1,7 @@
 package cl.uchile.dcc.cc5303;
 
-
-import cl.uchile.dcc.cc5303.elements.Bench;
-import cl.uchile.dcc.cc5303.elements.Level;
+import cl.uchile.dcc.cc5303.interfaces.IBench;
+import cl.uchile.dcc.cc5303.interfaces.ILevel;
 import cl.uchile.dcc.cc5303.interfaces.IPlayer;
 
 import java.awt.*;
@@ -15,7 +14,7 @@ public class Renderer extends Canvas{
     public Graphics buffer;
     public int width, height;
     public List<IPlayer> players;
-    public List<Level> levels;
+    public List<ILevel> levels;
 
     public Renderer(int width, int height) {
         this.width = width;
@@ -46,8 +45,12 @@ public class Renderer extends Canvas{
         }
 
         buffer.setColor(Color.white);
-        for(Level l : levels){
-            paint(l);
+        for(ILevel l : levels){
+            try {
+                paint(l);
+            } catch (RemoteException e) {
+                e.printStackTrace();
+            }
         }
 
         g.drawImage(img, 0, 0, null);
@@ -57,9 +60,9 @@ public class Renderer extends Canvas{
         buffer.fillRect(player.getLeft(), player.getTop(), player.getWidth(), player.getHeight());
     }
 
-    public void paint(Level level) {
-        for(Bench b : level.getBenches()){
-            buffer.fillRect(b.getPosX(), b.getPosY(), b.getWidth(), b.getHeight());
+    public void paint(ILevel level) throws RemoteException {
+        for(IBench b : level.getBenches()){
+            buffer.fillRect(b.getLeft(), b.getTop(), b.getWidth(), b.getHeight());
         }
     }
 }
