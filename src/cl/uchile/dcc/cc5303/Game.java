@@ -15,10 +15,35 @@ public class Game extends UnicastRemoteObject implements IGame {
 
     public List<Player> players;
     public LinkedList<Level> levels;
+    public boolean allTogether;
+    public int maxPlayers;
 
-    public Game(List<Player> players) throws RemoteException {
+    public Game() throws RemoteException {
         super();
-        this.players = players;
+        allTogether = false;
+        maxPlayers = 4;
+        this.players = new LinkedList<>();
+        levels = new LinkedList<Level>();
+        for (int i = 0; i < 6; i++) {
+            Level l = new Level(2);
+            levels.add(l);
+        }
+    }
+
+    public Game(boolean allTogether, int maxPlayers) throws RemoteException {
+        super();
+        this.allTogether = allTogether;
+        this.maxPlayers = maxPlayers;
+        this.players = new LinkedList<>();
+        levels = new LinkedList<Level>();
+        for (int i = 0; i < 6; i++) {
+            Level l = new Level(2);
+            levels.add(l);
+        }
+    }
+
+    public boolean isAllTogether() throws RemoteException{
+        return allTogether;
     }
 
     public void moveStageDown() {
@@ -41,7 +66,16 @@ public class Game extends UnicastRemoteObject implements IGame {
         return iplayers;
     }
 
+    public List<Player> getLocalPlayers() {
+        return players;
+    }
+
+
     public List<Level> getLevels() throws RemoteException{
         return levels;
+    }
+
+    public void addPlayer(Player newPlayer) throws RemoteException{
+        players.add(newPlayer);
     }
 }
