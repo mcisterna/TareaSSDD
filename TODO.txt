@@ -1,0 +1,4 @@
+- Para llegar al 4.0: Falta un punto, se supone que cuando dos players chocan deberian rebotar.
+- Para llegar al 5.0: Listo
+- Para llegar al 6.0: Listo
+- Para llegar al 7.0: Falta
