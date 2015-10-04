@@ -10,7 +10,6 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.List;
 
 public class Server extends UnicastRemoteObject implements IServer {
 
@@ -24,10 +23,10 @@ public class Server extends UnicastRemoteObject implements IServer {
     public IPlayer joinGame() throws RemoteException {
 
         //Game is full
-        if(game.players.size() == 4) return null;
+        if(game.players.size() == game.maxPlayers) return null;
 
-        Player player = game.isAllTogether() || Player.playerCounter == 0 ?
-                new Player(Player.playerCounter*150, 50, 3) : new Player(400, 0, 3);
+        Player player = game.isAllTogether() || Player.playerCounter < 2 ?
+                new Player(100 + Player.playerCounter*150, 50, 3) : new Player(400, 220, 3);
 
         game.addPlayer(player);
         return player;
@@ -44,11 +43,11 @@ public class Server extends UnicastRemoteObject implements IServer {
     private final static int WIDTH = 800, HEIGHT = 600;
     public static String url = "rmi://localhost:1099/game";
 
-    public static void main(String[] args) throws RemoteException, MalformedURLException {
+    public static void main(String[] args) throws RemoteException, MalformedURLException, InterruptedException {
 
         Game game;
-        if(args.length > 3) {
-            game = createAllTogetherGame(3);
+        if(args.length > 1) {
+            game = createAllTogetherGame(Integer.parseInt(args[1]));
         }
         else{
             game = createNormalGame();
@@ -58,6 +57,12 @@ public class Server extends UnicastRemoteObject implements IServer {
         IServer server = new Server(game);
         Naming.rebind(url, server);
         GameEngine gameEngine = new GameEngine(game);
+
+        while(true) {
+            if((!game.isAllTogether() && game.players.size() > 1) ||
+                    (game.isAllTogether()) && game.maxPlayers == game.players.size()) break;
+            Thread.sleep(1000);
+        }
         gameEngine.runGame();
     }
 
@@ -66,7 +71,7 @@ public class Server extends UnicastRemoteObject implements IServer {
     }
 
     static public Game createAllTogetherGame(int numPlayers) throws RemoteException {
-        return new Game(true, numPlayers);
+        return new Game(numPlayers);
     }
 
 
