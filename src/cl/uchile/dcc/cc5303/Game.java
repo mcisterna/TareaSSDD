@@ -3,9 +3,9 @@ package cl.uchile.dcc.cc5303;
 import cl.uchile.dcc.cc5303.elements.Level;
 import cl.uchile.dcc.cc5303.elements.Player;
 import cl.uchile.dcc.cc5303.interfaces.IGame;
+import cl.uchile.dcc.cc5303.interfaces.ILevel;
 import cl.uchile.dcc.cc5303.interfaces.IPlayer;
 
-import java.awt.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.LinkedList;
@@ -30,9 +30,9 @@ public class Game extends UnicastRemoteObject implements IGame {
         }
     }
 
-    public Game(boolean allTogether, int maxPlayers) throws RemoteException {
+    public Game(int maxPlayers) throws RemoteException {
         super();
-        this.allTogether = allTogether;
+        this.allTogether = true;
         this.maxPlayers = maxPlayers;
         this.players = new LinkedList<>();
         levels = new LinkedList<Level>();
@@ -46,7 +46,7 @@ public class Game extends UnicastRemoteObject implements IGame {
         return allTogether;
     }
 
-    public void moveStageDown() {
+    public void moveStageDown() throws RemoteException {
         levels.add(new Level(2));
         for(Level l : levels) l.moveDown();
         levels.remove();
@@ -71,8 +71,18 @@ public class Game extends UnicastRemoteObject implements IGame {
     }
 
 
-    public List<Level> getLevels() throws RemoteException{
+    public List<Level> getLocalLevels() throws RemoteException{
         return levels;
+    }
+
+    public List<ILevel> getLevels() throws RemoteException{
+
+        LinkedList<ILevel> ilevels = new LinkedList<>();
+        for(ILevel level : levels) {
+            ilevels.add(level);
+        }
+
+        return ilevels;
     }
 
     public void addPlayer(Player newPlayer){
