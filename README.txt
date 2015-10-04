@@ -4,6 +4,6 @@ Instrucciones para ejecutar:
 	- java -Djava.rmi.server.codebase=file:///path/a/los/archivos.class
 
 	Servidor:
-		ejecutar GameEngine (java path/a/gameengine)
+		ejecutar Server (java path/a/server)
 	Cliente:
 		ejecutar Client (java path/a/client)
