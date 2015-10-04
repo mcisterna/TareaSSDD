@@ -17,7 +17,7 @@ public class Client {
     static public void main(String[] args) throws RemoteException, NotBoundException, MalformedURLException {
         boolean[] keys = new boolean[KeyEvent.KEY_LAST];
 
-        IServer gameEngine = (IServer) Naming.lookup(GameEngine.url);
+        IServer gameEngine = (IServer) Naming.lookup(Server.url);
         IPlayer player  = gameEngine.joinGame();
 
         if(player == null) {
