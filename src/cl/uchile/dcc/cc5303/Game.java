@@ -42,7 +42,7 @@ public class Game extends UnicastRemoteObject implements IGame {
         }
     }
 
-    public boolean isAllTogether() throws RemoteException{
+    public boolean isAllTogether() {
         return allTogether;
     }
 
@@ -75,7 +75,7 @@ public class Game extends UnicastRemoteObject implements IGame {
         return levels;
     }
 
-    public void addPlayer(Player newPlayer) throws RemoteException{
+    public void addPlayer(Player newPlayer){
         players.add(newPlayer);
     }
 }

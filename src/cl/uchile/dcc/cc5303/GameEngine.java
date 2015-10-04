@@ -9,35 +9,27 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.util.LinkedList;
+import java.util.List;
 
 public class GameEngine {
 
-    private final static String TITLE = "Juego - CC5303";
-    private final static int WIDTH = 800, HEIGHT = 600;
+
     private final static int UPDATE_RATE = 60;
     private final static int DX = 5;
-    static boolean todosJuntos = false;
-    static LinkedList<Player> players;
-    public static String url = "rmi://localhost:1099/game";
+    private List<Player> players;
+    private Game game;
+    private List<Level> levels;
 
-    public static void main(String[] args) throws MalformedURLException, RemoteException {
+    public GameEngine(Game game) throws RemoteException {
+        this.players = game.getLocalPlayers();
+        this.levels = game.getLevels();
+        this.game = game;
+    }
+
+
+    public void runGame() {
 
         System.out.println("Iniciando Juego de SSDD...");
-        players = new LinkedList<Player>();
-
-        LinkedList<Level> levels;
-        levels = new LinkedList<Level>();
-        for (int i = 0; i < 6; i++) {
-            Level l = new Level(2);
-            levels.add(l);
-        }
-
-        Game game = new Game(players);
-        game.levels = levels;
-
-        IServer gameEngine = new Server(players, todosJuntos, game);
-        Naming.rebind(url, gameEngine);
-
         while (true) { // main loop
 
             for (Player player : players) {
