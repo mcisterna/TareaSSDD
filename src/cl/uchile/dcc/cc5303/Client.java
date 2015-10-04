@@ -21,7 +21,7 @@ public class Client {
         IPlayer player  = gameEngine.joinGame();
 
         if(player == null) {
-            System.out.println("Game is full (4 players max)");
+            System.out.println("Game is full");
         }
         else {
             IGame game = gameEngine.getGame();
