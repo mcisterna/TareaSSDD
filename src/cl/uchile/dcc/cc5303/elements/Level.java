@@ -1,16 +1,21 @@
 package cl.uchile.dcc.cc5303.elements;
 
-import java.io.Serializable;
+import cl.uchile.dcc.cc5303.interfaces.IBench;
+import cl.uchile.dcc.cc5303.interfaces.ILevel;
+
+import java.rmi.RemoteException;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 
-public class Level implements Serializable{
+public class Level extends GameObject implements ILevel {
 	
 	LinkedList<Bench> benches;
 	public int id;
 	static int staticId = 0;
 	
-	public Level(int nBench){
+	public Level(int nBench) throws RemoteException {
+		super();
 		this.id = staticId++;
 
 		benches = new LinkedList<Bench>();
@@ -35,10 +40,20 @@ public class Level implements Serializable{
 		}
 	}
 
-	public LinkedList<Bench> getBenches() {
+	public List<Bench> getLocalBenches() {
 		return benches;
 	}
-	
+
+
+	public List<IBench> getBenches() throws RemoteException{
+
+		LinkedList<IBench> ibenches = new LinkedList<>();
+		for(IBench bench : benches) {
+			ibenches.add(bench);
+		}
+
+		return ibenches;
+	}
 	
 	
 

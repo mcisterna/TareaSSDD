@@ -10,5 +10,5 @@ import java.util.List;
 public interface IGame extends Remote{
 
     public List<IPlayer> getPlayers() throws RemoteException;
-    public List<Level> getLevels() throws RemoteException;
+    public List<ILevel> getLevels() throws RemoteException;
 }

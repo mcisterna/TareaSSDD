@@ -4,14 +4,13 @@ import cl.uchile.dcc.cc5303.interfaces.IPlayer;
 
 import java.awt.*;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
+import java.util.*;
 import java.util.List;
 
-public class Player extends UnicastRemoteObject implements IPlayer {
+public class Player extends GameObject implements IPlayer {
 
     public static int playerCounter= 0;
     static public Color[] playerColors = {Color.red, Color.blue, Color.green, Color.cyan};
-    int posX, posY, w = 14, h = 20;
     double speed = 0.4;
     public boolean isStandingUp = false;
     int lives;
@@ -22,6 +21,8 @@ public class Player extends UnicastRemoteObject implements IPlayer {
         super();
         this.posX = x;
         this.posY = 600 -  y - this.h;
+        this.h = 20;
+        this.w = 14;
         this.lives = lives;
         this.color = playerColors[playerCounter];
         playerCounter++;
@@ -78,121 +79,30 @@ public class Player extends UnicastRemoteObject implements IPlayer {
         return color;
     }
 
+    public boolean isRightCollidingBenches(List<Level> levels) {
+        for(Level level : levels) {
+            if (isRightCollidingWith(level.getLocalBenches())) return true;
+        }
+
+        return false;
+    }
+
+    public boolean isLeftCollidingBenches(List<Level> levels) {
+        for(Level level : levels) {
+            if (isLeftCollidingWith(level.getLocalBenches())) return true;
+        }
+
+        return false;
+    }
+
     public void update(int dx){
         this.posY += this.speed*dx;
         this.speed += this.speed < 0.8 ? 0.02: 0;
     }
 
-    public void draw(Graphics g){
-        g.fillRect(this.posX, this.posY, this.w, this.h);
-    }
-
     @Override
     public String toString(){
         return "player: position ("+this.posX+","+this.posY+")";
-    }
-
-    public boolean isBottomCollidingWith(Bench b){
-        return Math.abs(bottom() - b.top()) < 10 && getRight() <= b.right() && getLeft() >= b.left();
-    }
-
-    public boolean isTopCollidingWith(Bench b){
-        return Math.abs(getTop() - b.bottom()) < 10 && getRight() <= b.right() && getLeft() >= b.left();
-    }
-    
-    public boolean isTopCollidingWith(Player p){
-    	return Math.abs(getTop() - p.bottom()) < 5 && Math.abs(getRight() - p.getRight()) < 10 && Math.abs(getLeft() - p.getLeft()) < 10;
-    }
-
-    public boolean isBottomCollidingWith(Player p){
-        return Math.abs(bottom() - p.getTop()) < 5 && Math.abs(getRight() - p.getRight()) < 10 && Math.abs(getLeft() - p.getLeft()) < 10;
-    }
-
-    public boolean isRightCollidingWith(Player p){
-    	boolean right = (Math.abs(getRight() - p.getLeft()) < 5);
-    	boolean m = Math.abs(getTop() - p.getTop()) < 20;
-    	return right && m;
-    }
-
-    public boolean isRightCollidingWith(List<Player> otherPlayers) {
-        for(Player otherPlayer : otherPlayers) {
-            if (isRightCollidingWith(otherPlayer)) return true;
-        }
-
-        return false;
-    }
-
-    public boolean isLeftCollidingWith(List<Player> otherPlayers) {
-        for(Player otherPlayer : otherPlayers) {
-            if (isLeftCollidingWith(otherPlayer)) return true;
-        }
-
-        return false;
-    }
-
-    public boolean isBottomCollidingWith(List<Player> otherPlayers) {
-        for(Player otherPlayer : otherPlayers) {
-            if (otherPlayer != this && isBottomCollidingWith(otherPlayer)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public boolean isTopCollidingWith(List<Player> otherPlayers) {
-        for(Player otherPlayer : otherPlayers) {
-            if (isTopCollidingWith(otherPlayer)) return true;
-        }
-
-        return false;
-    }
-    
-    public boolean isLeftCollidingWith(Player p){
-    	boolean left = (Math.abs(p.getRight() - getLeft()) < 5);
-    	boolean m = Math.abs(getTop() - p.getTop()) < 20;
-    	return left && m;
-    }
-
-    public boolean isRightCollidingWith(Bench p){
-        boolean right = (Math.abs(getRight() - p.left()) < 5);
-        boolean m = Math.abs(getTop() - p.top()) < 20;
-        return right && m;
-    }
-
-    public boolean isLeftCollidingWith(Bench p){
-        boolean left = (Math.abs(p.right() - getLeft()) < 5);
-        boolean m = Math.abs(getTop() - p.top()) < 20;
-        return left && m;
-    }
-
-    public int getLeft() {
-        return this.posX;
-    }
-
-    public int bottom() {
-        return this.posY + this.h;
-    }
-
-    public int getRight() {
-        return this.posX + this.w;
-    }
-
-    public int getTop() {
-        return posY;
-    }
-    public int getHeight() {
-        return h;
-    }
-    public int getWidth() {
-        return w;
-    }
-
-    public void setPosX(int x) {
-        this.posX = x;
-    }
-    public void setPosY(int y) {
-        this.posY = y;
     }
 
     public void setSpeed(double speed) {
