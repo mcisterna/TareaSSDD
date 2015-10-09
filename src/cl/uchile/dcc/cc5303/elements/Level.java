@@ -10,6 +10,7 @@ import java.util.Random;
 
 public class Level extends GameObject implements ILevel {
 	
+
 	LinkedList<Bench> benches;
 	public int id;
 	static int staticId = 0;
@@ -47,7 +48,8 @@ public class Level extends GameObject implements ILevel {
 
 	public List<IBench> getBenches() throws RemoteException{
 
-		LinkedList<IBench> ibenches = new LinkedList<>();
+		LinkedList<IBench> ibenches;
+		ibenches = new LinkedList<IBench>();
 		for(IBench bench : benches) {
 			ibenches.add(bench);
 		}

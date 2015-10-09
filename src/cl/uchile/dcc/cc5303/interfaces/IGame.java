@@ -11,4 +11,5 @@ public interface IGame extends Remote{
 
     public List<IPlayer> getPlayers() throws RemoteException;
     public List<ILevel> getLevels() throws RemoteException;
+    public List<IPlayer> getRanking() throws RemoteException;
 }

@@ -18,4 +18,6 @@ public interface IPlayer extends Remote{
     public int getWidth() throws RemoteException;
     public int getHeight() throws RemoteException;
     public Color getColor() throws RemoteException;
+    public int getLives() throws RemoteException;
+    public void setColor(Color color) throws RemoteException;
 }

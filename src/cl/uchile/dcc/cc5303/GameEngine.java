@@ -14,18 +14,21 @@ public class GameEngine {
     private List<Player> players;
     private Game game;
     private List<Level> levels;
+    private List<Player> ranking;
 
     public GameEngine(Game game) throws RemoteException {
         this.players = game.getLocalPlayers();
         this.levels = game.getLocalLevels();
+        this.ranking = game.getLocalRanking();
         this.game = game;
     }
 
-    public Player runGame() throws RemoteException {
+    public void runGame() throws RemoteException {
 
         System.out.println("Iniciando Juego de SSDD...");
         while (players.size() != 1) { // main loop
-            for (Player player : players) {
+            for (int j=0;j<players.size();j++) {
+            	Player player = players.get(j);
 
                 if (player.wantsToJump && !player.isTopCollidingWith(players)) player.jump();
                 if (player.wantsToMoveRight &&
@@ -34,6 +37,18 @@ public class GameEngine {
                 if (player.wantsToMoveLeft &&
                         !player.isLeftCollidingWith(players) &&
                         !player.isLeftCollidingBenches(levels)) player.moveLeft();
+                
+                if(player.isRightCollidingWith(players)){
+                	for (int i = 0; i < 10; i++)
+                		player.moveLeft();
+
+                }
+                	
+                if(player.isLeftCollidingWith(players)){
+                	for (int i = 0; i < 10; i++)
+                		player.moveRight();
+                }
+                	
 
 
                 if (player.getTop() > game.levels.getFirst().getBenches().get(0).getBottom()) {
@@ -43,6 +58,8 @@ public class GameEngine {
                         player.setPosX(400);
                     } else {
                         players.remove(player);
+                        j--;
+                        ranking.add(0,player);
                     }
                 }
             }
@@ -80,7 +97,7 @@ public class GameEngine {
 
             }
         }
-
-        return players.get(0);
+        ranking.add(0,players.get(0));
+        players.remove(players.get(0));
     }
 }

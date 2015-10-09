@@ -5,6 +5,8 @@ import cl.uchile.dcc.cc5303.interfaces.IPlayer;
 import cl.uchile.dcc.cc5303.interfaces.IServer;
 
 import javax.swing.*;
+
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.net.MalformedURLException;
@@ -15,18 +17,18 @@ import java.rmi.RemoteException;
 public class Client {
 
     static public void main(String[] args) throws RemoteException, NotBoundException, MalformedURLException {
-        boolean[] keys = new boolean[KeyEvent.KEY_LAST];
+        final boolean[] keys = new boolean[KeyEvent.KEY_LAST];
+        boolean playing = true;
 
-        IServer gameEngine = (IServer) Naming.lookup(Server.url);
-        IPlayer player  = gameEngine.joinGame();
+        IServer server = (IServer) Naming.lookup(Server.url);
+        IPlayer player  = server.joinGame();
+        Color color = player.getColor();
 
         if(player == null) {
             System.out.println("Game is full");
         }
         else {
-            IGame game = gameEngine.getGame();
-
-
+            IGame game = server.getGame();
 
             JFrame frame = new JFrame("CLIENT");
             frame.setVisible(true);
@@ -52,38 +54,64 @@ public class Client {
                 }
             });
 
-
-            while (true) {
-
-                if (keys[KeyEvent.VK_UP]) {
-                    player.startJumping();
-                }
-                else {
-                    player.stopJumping();
-                }
-                if (keys[KeyEvent.VK_RIGHT]) {
-                    player.startMovingRight();
-                }
-                else {
-                    player.stopMovingRight();
-                }
-                if (keys[KeyEvent.VK_LEFT]) {
-                    player.startMovingLeft();
-                }
-                else {
-                    player.stopMovingLeft();
-                }
-                renderer.players = game.getPlayers();
-                renderer.levels = game.getLevels();
-                renderer.repaint();
-                try {
-                    Thread.sleep(1000 / 60);//UPDATE RATE DEL game engine
-                } catch (InterruptedException ex) {
-
-                }
-
-                frame.requestFocus();
+            while(true){
+            	renderer.playing = true;
+	            while (game.getPlayers().size()>0) {
+	
+	                if (keys[KeyEvent.VK_UP]) {
+	                    player.startJumping();
+	                }
+	                else {
+	                    player.stopJumping();
+	                }
+	                if (keys[KeyEvent.VK_RIGHT]) {
+	                    player.startMovingRight();
+	                }
+	                else {
+	                    player.stopMovingRight();
+	                }
+	                if (keys[KeyEvent.VK_LEFT]) {
+	                    player.startMovingLeft();
+	                }
+	                else {
+	                    player.stopMovingLeft();
+	                }
+	                renderer.players = game.getPlayers();
+	                renderer.levels = game.getLevels();
+	                renderer.repaint();
+	                try {
+	                    Thread.sleep(1000 / 60);//UPDATE RATE DEL game engine
+	                } catch (InterruptedException ex) {
+	
+	                }
+	
+	                frame.requestFocus();
+	            }
+	            renderer.playing = false;
+	            renderer.ranking = game.getRanking();
+	            
+	            while(!keys[KeyEvent.VK_ENTER]){
+	            	renderer.repaint();
+	            	 try {
+		                    Thread.sleep(1000 / 60);//UPDATE RATE DEL game engine
+		                } catch (InterruptedException ex) {
+		
+		                }
+	            	 frame.requestFocus();
+	            }
+	            while(game.equals(server.getGame())){
+	            	try {
+	                    Thread.sleep(1000);//UPDATE RATE DEL game engine
+	                } catch (InterruptedException ex) {
+	
+	                }
+	            }
+	            game = server.getGame();
+	            player = server.joinGame();
+	            player.setColor(color);
+	            
             }
+            
         }
     }
 }

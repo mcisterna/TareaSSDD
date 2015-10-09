@@ -9,11 +9,12 @@ import java.util.List;
 
 public class Player extends GameObject implements IPlayer {
 
-    public static int playerCounter= 0;
+ 
+	public static int playerCounter= 0;
     static public Color[] playerColors = {Color.red, Color.blue, Color.green, Color.cyan};
     double speed = 0.4;
     public boolean isStandingUp = false;
-    int lives;
+    public int lives;
     Color color;
     public boolean wantsToMoveRight, wantsToMoveLeft, wantsToJump;
 
@@ -25,7 +26,7 @@ public class Player extends GameObject implements IPlayer {
         this.w = 14;
         this.lives = lives;
         this.color = playerColors[playerCounter];
-        playerCounter++;
+        playerCounter = (playerCounter + 1) % 4;
         wantsToMoveLeft = false;
         wantsToMoveRight = false;
         wantsToJump = false;
@@ -116,4 +117,10 @@ public class Player extends GameObject implements IPlayer {
     public void  looseLife() {
         lives--;
     }
+
+	@Override
+	public void setColor(Color color) throws RemoteException {
+		this.color = color;
+		
+	}
 }

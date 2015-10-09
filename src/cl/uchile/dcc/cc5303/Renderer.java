@@ -10,15 +10,19 @@ import java.util.List;
 
 public class Renderer extends Canvas{
 
-    public Image img;
+
+	public Image img;
     public Graphics buffer;
     public int width, height;
     public List<IPlayer> players;
     public List<ILevel> levels;
+    boolean playing;
+    public List<IPlayer> ranking;
 
     public Renderer(int width, int height) {
         this.width = width;
         this.height = height;
+        playing = true;
     }
 
     @Override
@@ -26,34 +30,56 @@ public class Renderer extends Canvas{
 
     @Override
     public void paint(Graphics g){
-
-        if(buffer==null){
-            img = createImage(getWidth(),getHeight() );
-            buffer = img.getGraphics();
-        }
-
-        buffer.setColor(Color.black);
-        buffer.fillRect(0, 0, getWidth(), getHeight());;
-
-        for(IPlayer player : players) {
-            try {
-                buffer.setColor(player.getColor());
-                paint(player);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
-
-        buffer.setColor(Color.white);
-        for(ILevel l : levels){
-            try {
-                paint(l);
-            } catch (RemoteException e) {
-                e.printStackTrace();
-            }
-        }
-
-        g.drawImage(img, 0, 0, null);
+    	
+	        if(buffer==null){
+	            img = createImage(getWidth(),getHeight() );
+	            buffer = img.getGraphics();
+	        }
+	
+	        buffer.setColor(Color.black);
+	        buffer.fillRect(0, 0, getWidth(), getHeight());
+	        if(playing){
+		        int pos = 30;
+		        for(IPlayer player : players) {
+		            try {
+		                buffer.setColor(player.getColor());
+		                buffer.drawString(""+player.getLives(), 780, pos);
+		                pos += 13;
+		                paint(player);
+		            } catch (RemoteException e) {
+		                e.printStackTrace();
+		            }
+		        }
+		
+		        buffer.setColor(Color.white);
+		        for(ILevel l : levels){
+		            try {
+		                paint(l);
+		            } catch (RemoteException e) {
+		                e.printStackTrace();
+		            }
+		        }
+		
+    	}else{
+    		int pos = 200;
+    		for(IPlayer player: ranking){
+    			try {
+					buffer.setColor(player.getColor());
+					buffer.drawString("Player",350,pos);
+					pos += 13;
+					
+					
+				} catch (RemoteException e) {
+					e.printStackTrace();
+				}
+    			
+    		}
+    		buffer.setColor(Color.white);
+    		buffer.drawString("Press Enter to play again ", 350, pos);
+    		
+    		
+    	}
+	        g.drawImage(img, 0, 0, null);
     }
 
     public void paint(IPlayer player) throws RemoteException {

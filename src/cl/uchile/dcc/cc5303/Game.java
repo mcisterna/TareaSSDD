@@ -13,16 +13,19 @@ import java.util.List;
 
 public class Game extends UnicastRemoteObject implements IGame {
 
-    public List<Player> players;
+ 
+	public List<Player> players;
     public LinkedList<Level> levels;
     public boolean allTogether;
     public int maxPlayers;
+    List<Player> ranking;
 
     public Game() throws RemoteException {
         super();
         allTogether = false;
         maxPlayers = 4;
-        this.players = new LinkedList<>();
+        this.players = new LinkedList<Player>();
+        this.ranking = new LinkedList<Player>();
         levels = new LinkedList<Level>();
         for (int i = 0; i < 6; i++) {
             Level l = new Level(2);
@@ -34,7 +37,7 @@ public class Game extends UnicastRemoteObject implements IGame {
         super();
         this.allTogether = true;
         this.maxPlayers = maxPlayers;
-        this.players = new LinkedList<>();
+        this.players = new LinkedList<Player>();
         levels = new LinkedList<Level>();
         for (int i = 0; i < 6; i++) {
             Level l = new Level(2);
@@ -58,7 +61,8 @@ public class Game extends UnicastRemoteObject implements IGame {
 
     public List<IPlayer> getPlayers() throws RemoteException{
 
-        LinkedList<IPlayer> iplayers = new LinkedList<>();
+        LinkedList<IPlayer> iplayers;
+        iplayers = new LinkedList<IPlayer>();
         for(IPlayer player : players) {
             iplayers.add(player);
         }
@@ -77,15 +81,32 @@ public class Game extends UnicastRemoteObject implements IGame {
 
     public List<ILevel> getLevels() throws RemoteException{
 
-        LinkedList<ILevel> ilevels = new LinkedList<>();
+        LinkedList<ILevel> ilevels;
+        ilevels = new LinkedList<ILevel>();
         for(ILevel level : levels) {
             ilevels.add(level);
         }
 
         return ilevels;
     }
+    
+    public List<Player> getLocalRanking(){
+    	return ranking;
+    }
 
     public void addPlayer(Player newPlayer){
         players.add(newPlayer);
     }
+    
+
+	@Override
+	public List<IPlayer> getRanking() throws RemoteException {
+		LinkedList<IPlayer> iplayers;
+        iplayers = new LinkedList<IPlayer>();
+        for(IPlayer player : ranking) {
+            iplayers.add(player);
+        }
+
+        return iplayers;
+	}
 }
