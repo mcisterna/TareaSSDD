@@ -17,10 +17,15 @@ import java.rmi.RemoteException;
 public class Client {
 
     static public void main(String[] args) throws RemoteException, NotBoundException, MalformedURLException {
+    	System.out.println("Starting client...");
         final boolean[] keys = new boolean[KeyEvent.KEY_LAST];
-        boolean playing = true;
-
-        IServer server = (IServer) Naming.lookup(Server.url);
+        if(args.length == 0){
+        	System.out.println("Debe ingresar ip");
+        	return;
+        }
+        String ip = args[0];
+    	String url = "rmi://"+ip+":1099/game";
+        IServer server = (IServer) Naming.lookup(url);
         IPlayer player  = server.joinGame();
         Color color = player.getColor();
 
@@ -90,25 +95,16 @@ public class Client {
 	            renderer.playing = false;
 	            renderer.ranking = game.getRanking();
 	            
-	            while(!keys[KeyEvent.VK_ENTER]){
+	            while(true){
 	            	renderer.repaint();
 	            	 try {
-		                    Thread.sleep(1000 / 60);//UPDATE RATE DEL game engine
+		                    Thread.sleep(1000 / 60);
 		                } catch (InterruptedException ex) {
 		
 		                }
 	            	 frame.requestFocus();
 	            }
-	            while(game.equals(server.getGame())){
-	            	try {
-	                    Thread.sleep(1000);//UPDATE RATE DEL game engine
-	                } catch (InterruptedException ex) {
-	
-	                }
-	            }
-	            game = server.getGame();
-	            player = server.joinGame();
-	            player.setColor(color);
+
 	            
             }
             

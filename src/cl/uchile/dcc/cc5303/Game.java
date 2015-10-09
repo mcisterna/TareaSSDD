@@ -38,6 +38,7 @@ public class Game extends UnicastRemoteObject implements IGame {
         this.allTogether = true;
         this.maxPlayers = maxPlayers;
         this.players = new LinkedList<Player>();
+        this.ranking = new LinkedList<Player>();
         levels = new LinkedList<Level>();
         for (int i = 0; i < 6; i++) {
             Level l = new Level(2);

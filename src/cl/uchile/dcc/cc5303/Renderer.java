@@ -62,6 +62,9 @@ public class Renderer extends Canvas{
 		
     	}else{
     		int pos = 200;
+    		buffer.setColor(Color.white);
+	        buffer.drawString("Ranking",340,pos);
+	        pos += 15;
     		for(IPlayer player: ranking){
     			try {
 					buffer.setColor(player.getColor());
@@ -74,8 +77,7 @@ public class Renderer extends Canvas{
 				}
     			
     		}
-    		buffer.setColor(Color.white);
-    		buffer.drawString("Press Enter to play again ", 350, pos);
+
     		
     		
     	}
