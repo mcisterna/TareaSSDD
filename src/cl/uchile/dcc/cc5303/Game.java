@@ -50,10 +50,10 @@ public class Game extends UnicastRemoteObject implements IGame {
     }
 
     public void restart() throws RemoteException {
-        allTogether = true;
         this.players = new LinkedList<>();
         this.ranking = new LinkedList<>();
         this.levels = new LinkedList<>();
+        this.numPlayers = 0;
         Level.staticId = 0;
         for (int i = 0; i < 6; i++) {
             Level l = new Level();
@@ -113,8 +113,8 @@ public class Game extends UnicastRemoteObject implements IGame {
 
     public Player addPlayer() throws RemoteException {
 
-        Player newPlayer = isAllTogether() || Player.playerCounter < 2 ?
-                new Player(100 + Player.playerCounter*150, 50, 3) : new Player(400, 220, 3);
+        Player newPlayer = isAllTogether() || numPlayers < 2 ?
+                new Player(100 + numPlayers*150, 50, 3) : new Player(400, 220, 3);
 
         players.add(newPlayer);
         this.numPlayers++;
