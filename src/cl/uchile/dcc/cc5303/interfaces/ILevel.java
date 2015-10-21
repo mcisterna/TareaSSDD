@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface ILevel extends Remote{
 
-    public List<IBench> getBenches() throws RemoteException;
+    List<IBench> getBenches() throws RemoteException;
 }

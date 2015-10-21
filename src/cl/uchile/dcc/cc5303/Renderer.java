@@ -32,7 +32,7 @@ public class Renderer extends Canvas{
     public void paint(Graphics g){
     	
 	        if(buffer==null){
-	            img = createImage(getWidth(),getHeight() );
+	            img = createImage(getWidth(),getHeight());
 	            buffer = img.getGraphics();
 	        }
 	

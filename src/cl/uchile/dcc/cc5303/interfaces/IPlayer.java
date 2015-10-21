@@ -6,18 +6,18 @@ import java.rmi.RemoteException;
 
 public interface IPlayer extends Remote{
 
-    public void startJumping() throws RemoteException;
-    public void startMovingRight() throws RemoteException;
-    public void startMovingLeft() throws RemoteException;
-    public void stopJumping() throws RemoteException;
-    public void stopMovingRight() throws RemoteException;
-    public void stopMovingLeft() throws RemoteException;
-    public int getLeft() throws RemoteException;
-    public int getRight() throws RemoteException;
-    public int getTop() throws RemoteException;
-    public int getWidth() throws RemoteException;
-    public int getHeight() throws RemoteException;
-    public Color getColor() throws RemoteException;
-    public int getLives() throws RemoteException;
-    public void setColor(Color color) throws RemoteException;
+    void startJumping() throws RemoteException;
+    void startMovingRight() throws RemoteException;
+    void startMovingLeft() throws RemoteException;
+    void stopJumping() throws RemoteException;
+    void stopMovingRight() throws RemoteException;
+    void stopMovingLeft() throws RemoteException;
+    int getLeft() throws RemoteException;
+    int getRight() throws RemoteException;
+    int getTop() throws RemoteException;
+    int getWidth() throws RemoteException;
+    int getHeight() throws RemoteException;
+    Color getColor() throws RemoteException;
+    int getLives() throws RemoteException;
+    void setColor(Color color) throws RemoteException;
 }

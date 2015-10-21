@@ -5,7 +5,7 @@ import java.rmi.RemoteException;
 
 public interface IServer extends Remote{
 
-    public IPlayer joinGame() throws RemoteException;
-    public IGame getGame() throws RemoteException;
-
+    IPlayer joinGame() throws RemoteException;
+    IGame getGame() throws RemoteException;
+    void playerIsReadyToContinue() throws RemoteException;
 }

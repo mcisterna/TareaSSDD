@@ -4,10 +4,10 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 
 public interface IBench extends Remote{
-    public int getLeft() throws RemoteException;
-    public int getRight() throws RemoteException;
-    public int getTop() throws RemoteException;
-    public int getBottom() throws RemoteException;
-    public int getWidth() throws RemoteException;
-    public int getHeight() throws RemoteException;
+    int getLeft() throws RemoteException;
+    int getRight() throws RemoteException;
+    int getTop() throws RemoteException;
+    int getBottom() throws RemoteException;
+    int getWidth() throws RemoteException;
+    int getHeight() throws RemoteException;
 }
