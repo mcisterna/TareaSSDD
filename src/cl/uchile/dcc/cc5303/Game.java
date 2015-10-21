@@ -1,5 +1,6 @@
 package cl.uchile.dcc.cc5303;
 
+import cl.uchile.dcc.cc5303.elements.Bench;
 import cl.uchile.dcc.cc5303.elements.Level;
 import cl.uchile.dcc.cc5303.elements.Player;
 import cl.uchile.dcc.cc5303.interfaces.IGame;
@@ -13,9 +14,9 @@ import java.util.List;
 
 public class Game extends UnicastRemoteObject implements IGame {
 
- 
 	public List<Player> players;
     public LinkedList<Level> levels;
+    public int numPlayers;
     public boolean allTogether;
     public int maxPlayers;
     List<Player> ranking;
@@ -24,11 +25,12 @@ public class Game extends UnicastRemoteObject implements IGame {
         super();
         allTogether = false;
         maxPlayers = 4;
+        numPlayers = 0;
         this.players = new LinkedList<Player>();
         this.ranking = new LinkedList<Player>();
         levels = new LinkedList<Level>();
         for (int i = 0; i < 6; i++) {
-            Level l = new Level(2);
+            Level l = new Level();
             levels.add(l);
         }
     }
@@ -37,13 +39,27 @@ public class Game extends UnicastRemoteObject implements IGame {
         super();
         this.allTogether = true;
         this.maxPlayers = maxPlayers;
+        this.numPlayers = 0;
         this.players = new LinkedList<Player>();
         this.ranking = new LinkedList<Player>();
-        levels = new LinkedList<Level>();
+        this.levels = new LinkedList<Level>();
         for (int i = 0; i < 6; i++) {
-            Level l = new Level(2);
+            Level l = new Level();
             levels.add(l);
         }
+    }
+
+    public void restart() throws RemoteException {
+        allTogether = true;
+        this.players = new LinkedList<>();
+        this.ranking = new LinkedList<>();
+        this.levels = new LinkedList<>();
+        Level.staticId = 0;
+        for (int i = 0; i < 6; i++) {
+            Level l = new Level();
+            levels.add(l);
+        }
+
     }
 
     public boolean isAllTogether() {
@@ -51,7 +67,7 @@ public class Game extends UnicastRemoteObject implements IGame {
     }
 
     public void moveStageDown() throws RemoteException {
-        levels.add(new Level(2));
+        levels.add(new Level());
         for(Level l : levels) l.moveDown();
         levels.remove();
 
@@ -95,8 +111,14 @@ public class Game extends UnicastRemoteObject implements IGame {
     	return ranking;
     }
 
-    public void addPlayer(Player newPlayer){
+    public Player addPlayer() throws RemoteException {
+
+        Player newPlayer = isAllTogether() || Player.playerCounter < 2 ?
+                new Player(100 + Player.playerCounter*150, 50, 3) : new Player(400, 220, 3);
+
         players.add(newPlayer);
+        this.numPlayers++;
+        return newPlayer;
     }
     
 
