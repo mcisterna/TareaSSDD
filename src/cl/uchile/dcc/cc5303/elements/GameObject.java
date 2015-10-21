@@ -6,7 +6,6 @@ import java.util.List;
 
 public abstract class GameObject extends UnicastRemoteObject{
 
-
 	int posX, posY, w, h;
 
     protected GameObject() throws RemoteException {

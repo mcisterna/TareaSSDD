@@ -5,8 +5,6 @@ import java.rmi.RemoteException;
 
 public class Bench extends GameObject implements IBench {
 
-
-
 	public Bench(int x, int y, int width) throws RemoteException {
         super();
         this.w = width;

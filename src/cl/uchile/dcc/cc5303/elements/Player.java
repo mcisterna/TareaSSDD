@@ -9,7 +9,6 @@ import java.util.List;
 
 public class Player extends GameObject implements IPlayer {
 
- 
 	public static int playerCounter= 0;
     static public Color[] playerColors = {Color.red, Color.blue, Color.green, Color.cyan};
     double speed = 0.4;

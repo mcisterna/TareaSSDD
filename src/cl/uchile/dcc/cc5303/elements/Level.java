@@ -9,13 +9,12 @@ import java.util.List;
 import java.util.Random;
 
 public class Level extends GameObject implements ILevel {
-	
 
 	LinkedList<Bench> benches;
 	public int id;
-	static int staticId = 0;
+	public static int staticId = 0;
 	
-	public Level(int nBench) throws RemoteException {
+	public Level() throws RemoteException {
 		super();
 		this.id = staticId++;
 
