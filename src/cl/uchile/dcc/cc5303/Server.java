@@ -24,7 +24,7 @@ public class Server extends UnicastRemoteObject implements IServer {
     public IPlayer joinGame() throws RemoteException {
 
         //Game is full
-        if(game.players.size() == game.maxPlayers) return null;
+        if(game.numPlayers == game.maxPlayers) return null;
 
         Player newPlayer = game.addPlayer();
         return newPlayer;
