@@ -61,7 +61,6 @@ public class Client {
 
 			while (true) {
 				while (game.getPlayers().size() > 0) {
-
 					if (keys[KeyEvent.VK_UP]) {
 						player.startJumping();
 					} else {
@@ -107,7 +106,7 @@ public class Client {
 				}
 
 				game = server.getGame();
-				server.joinGame();
+				player = server.joinGame();
 
 			}
 
