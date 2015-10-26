@@ -5,6 +5,8 @@ import cl.uchile.dcc.cc5303.interfaces.IGame;
 import cl.uchile.dcc.cc5303.interfaces.IPlayer;
 import cl.uchile.dcc.cc5303.interfaces.IServer;
 
+import java.lang.management.ManagementFactory;
+import java.lang.management.OperatingSystemMXBean;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.RemoteException;
@@ -42,6 +44,11 @@ public class Server extends UnicastRemoteObject implements IServer {
     @Override
     synchronized public void playerIsReadyToContinue() throws RemoteException {
         playersWaiting--;
+    }
+
+    @Override
+    public double getLoad() throws RemoteException {
+        return ManagementFactory.getOperatingSystemMXBean().getSystemLoadAverage();
     }
 
     public void waitForAllPlayers() throws RemoteException, InterruptedException {
@@ -82,12 +89,24 @@ public class Server extends UnicastRemoteObject implements IServer {
         Server server = new Server(game);
         Naming.rebind(url, server);
 
+
+        //Esto en otro thread?
         while(true) {
             server.waitUntilGameIsReadyToStart();
             server.startGame();
-            server.waitForAllPlayers();
-            server.restartGame();
+            if(elJuegoNoTerminoPorStop) {
+                server.waitForAllPlayers();
+                server.restartGame();
+            }
+            else {
+                break;
+            }
         }
+        //Hasta aca
+
+        //Desde aca ir chequeando si el servidor esta sobrecargado
+        //Si lo esta, stopear el juego, pedir el servidor con menos carga al server manager,
+        //enviar Game al nuevo servidor, y enviar a los clientes la nueva IP
 
     }
 

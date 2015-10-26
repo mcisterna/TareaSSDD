@@ -8,4 +8,5 @@ public interface IServer extends Remote{
     IPlayer joinGame() throws RemoteException;
     IGame getGame() throws RemoteException;
     void playerIsReadyToContinue() throws RemoteException;
+    double getLoad() throws RemoteException;
 }
