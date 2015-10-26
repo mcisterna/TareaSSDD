@@ -1,6 +1,5 @@
 package cl.uchile.dcc.cc5303;
 
-import cl.uchile.dcc.cc5303.elements.Bench;
 import cl.uchile.dcc.cc5303.elements.Level;
 import cl.uchile.dcc.cc5303.elements.Player;
 import cl.uchile.dcc.cc5303.interfaces.IGame;

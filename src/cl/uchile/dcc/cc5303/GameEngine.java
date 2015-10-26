@@ -15,18 +15,24 @@ public class GameEngine {
     private Game game;
     private List<Level> levels;
     private List<Player> ranking;
+    private boolean stop;
 
     public GameEngine(Game game) throws RemoteException {
         this.players = game.getLocalPlayers();
         this.levels = game.getLocalLevels();
         this.ranking = game.getLocalRanking();
         this.game = game;
+        stop = false;
+    }
+
+    public void stop() {
+        stop = true;
     }
 
     public void runGame() throws RemoteException {
 
         System.out.println("Iniciando Juego de SSDD...");
-        while (players.size() != 1) { // main loop
+        while (players.size() != 1 && !stop) { // main loop
             for (int j=0;j<players.size();j++) {
             	Player player = players.get(j);
 
@@ -97,7 +103,9 @@ public class GameEngine {
 
             }
         }
-        ranking.add(0,players.get(0));
-        players.remove(players.get(0));
+        if(!stop) {
+            ranking.add(0, players.get(0));
+            players.remove(players.get(0));
+        }
     }
 }
