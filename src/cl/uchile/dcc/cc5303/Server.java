@@ -110,11 +110,5 @@ public class Server extends UnicastRemoteObject implements IServer {
 
     }
 
-    static public Game createNormalGame() throws RemoteException {
-        return new Game();
-    }
 
-    static public Game createAllTogetherGame(int numPlayers) throws RemoteException {
-        return new Game(numPlayers);
-    }
 }
