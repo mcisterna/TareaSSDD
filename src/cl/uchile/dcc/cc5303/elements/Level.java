@@ -31,6 +31,14 @@ public class Level extends GameObject implements ILevel {
 		}
 
 	}
+	
+	public Level(int id, int staticID, LinkedList<Bench> benches) throws RemoteException {
+		super();
+		this.id = id;
+		staticId = staticID;
+		this.benches = benches;
+
+	}
 
 	public void moveDown(){
 		this.id--;
@@ -54,6 +62,18 @@ public class Level extends GameObject implements ILevel {
 		}
 
 		return ibenches;
+	}
+
+	@Override
+	public int getId() throws RemoteException {
+		// TODO Auto-generated method stub
+		return id;
+	}
+
+	@Override
+	public int getStaticId() throws RemoteException {
+		// TODO Auto-generated method stub
+		return staticId;
 	}
 	
 	

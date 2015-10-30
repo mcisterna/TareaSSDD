@@ -132,4 +132,35 @@ public class Game extends UnicastRemoteObject implements IGame {
 
         return iplayers;
 	}
+
+
+	@Override
+	public int getNumPlayers() throws RemoteException {
+		// TODO Auto-generated method stub
+		return numPlayers;
+	}
+
+
+	@Override
+	public boolean getAllTogether() throws RemoteException {
+		// TODO Auto-generated method stub
+		return allTogether;
+	}
+
+
+	@Override
+	public int getMaxPlayers() throws RemoteException {
+		// TODO Auto-generated method stub
+		return maxPlayers;
+	}
+
+
+	@Override
+	public IPlayer getPlayerById(int id) throws RemoteException {
+		for(Player p : players){
+			if(p.getId() == id)
+				return p;
+		}
+		return null;
+	}
 }

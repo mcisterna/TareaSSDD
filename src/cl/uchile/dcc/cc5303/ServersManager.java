@@ -27,7 +27,7 @@ public class ServersManager extends UnicastRemoteObject implements IServersManag
 
     public IServer getLowestLoadServer() throws RemoteException{
         IServer lowestLoadServer = null;
-        double lowestLoad = 1;
+        double lowestLoad = 5;
 
         for(IServer server : servers) {
             if(server.getLoad() < lowestLoad) lowestLoadServer = server;
@@ -44,7 +44,6 @@ public class ServersManager extends UnicastRemoteObject implements IServersManag
         String ip = args[0];
         System.setProperty("java.rmi.server.hostname",ip);
         String url = "rmi://"+ip+":1099/game";
-        Game game;
         System.out.println("Starting Server Manager...");
 
         ServersManager serversManager = new ServersManager();
@@ -57,10 +56,12 @@ public class ServersManager extends UnicastRemoteObject implements IServersManag
 
         while(true) {
         	System.out.println(serversManager.currentServer.getLoad());
-            if(serversManager.currentServer.getLoad() > ServersManager.MAX_LOAD) {
+        	System.out.println(serversManager.currentServer.getGame().getPlayers().size());
+            if(serversManager.currentServer.getGame().getPlayers().size() > 0 && serversManager.currentServer.getGame().getPlayers().get(0).isWantsToMoveLeft()) {
             	serversManager.currentServer.stopGame();
                 IServer newServer = serversManager.getLowestLoadServer();
-                newServer.resumeGame(serversManager.currentServer.getGame2());
+                newServer.resumeGame(serversManager.currentServer.getGame());
+                serversManager.currentServer = newServer;
                 }
 
             Thread.sleep(1000);

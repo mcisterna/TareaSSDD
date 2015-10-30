@@ -14,7 +14,9 @@ public class Player extends GameObject implements IPlayer {
     double speed = 0.4;
     public boolean isStandingUp = false;
     public int lives;
-    Color color;
+    public int id;
+    
+	Color color;
     public boolean wantsToMoveRight, wantsToMoveLeft, wantsToJump;
 
     public Player(int x, int y, int lives) throws RemoteException {
@@ -26,9 +28,21 @@ public class Player extends GameObject implements IPlayer {
         this.lives = lives;
         this.color = playerColors[playerCounter];
         playerCounter = (playerCounter + 1) % 4;
+        id = playerCounter;
         wantsToMoveLeft = false;
         wantsToMoveRight = false;
         wantsToJump = false;
+    }
+    
+    public Player(int posX, int posY, int h, int w, int lives, int playerCounter, Color color) throws RemoteException {
+        super();
+        this.posX = posX;
+        this.posY = posY;
+        this.h = h;
+        this.w = w;
+        this.lives = lives;
+        this.color = color;
+
     }
 
     public void jump(){
@@ -75,10 +89,6 @@ public class Player extends GameObject implements IPlayer {
         wantsToMoveLeft = false;
     }
 
-    public Color getColor() throws RemoteException {
-        return color;
-    }
-
     public boolean isRightCollidingBenches(List<Level> levels) {
         for(Level level : levels) {
             if (isRightCollidingWith(level.getLocalBenches())) return true;
@@ -122,4 +132,78 @@ public class Player extends GameObject implements IPlayer {
 		this.color = color;
 		
 	}
+	
+	@Override
+	public int getPlayerCounter() {
+		return playerCounter;
+	}
+
+	@Override
+	public void setPlayerCounter(int playerCounter) {
+		Player.playerCounter = playerCounter;
+	}
+
+	@Override
+	public boolean isStandingUp() {
+		return isStandingUp;
+	}
+
+	@Override
+	public void setStandingUp(boolean isStandingUp) {
+		this.isStandingUp = isStandingUp;
+	}
+
+	@Override
+	public boolean isWantsToMoveRight() {
+		return wantsToMoveRight;
+	}
+
+	@Override
+	public void setWantsToMoveRight(boolean wantsToMoveRight) {
+		this.wantsToMoveRight = wantsToMoveRight;
+	}
+
+	@Override
+	public boolean isWantsToMoveLeft() {
+		return wantsToMoveLeft;
+	}
+
+	@Override
+	public void setWantsToMoveLeft(boolean wantsToMoveLeft) {
+		this.wantsToMoveLeft = wantsToMoveLeft;
+	}
+
+	@Override
+	public boolean isWantsToJump() {
+		return wantsToJump;
+	}
+
+	@Override
+	public void setWantsToJump(boolean wantsToJump) {
+		this.wantsToJump = wantsToJump;
+	}
+
+	@Override
+	public double getSpeed() {
+		return speed;
+	}
+
+	@Override
+	public void setLives(int lives) {
+		this.lives = lives;
+	}
+
+	@Override
+	public Color getColor() throws RemoteException {
+		return this.color;
+	}
+	
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
 }

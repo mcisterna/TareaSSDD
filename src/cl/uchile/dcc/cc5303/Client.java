@@ -31,6 +31,8 @@ public class Client {
 		IServersManager serversManager = (IServersManager) Naming.lookup(url);
 		IServer server = serversManager.getCurrentServer();
 		IPlayer player = server.joinGame();
+		int id = player.getId(); 
+		
 		IGame game = null;
 
 		if (player == null) {
@@ -64,20 +66,23 @@ public class Client {
 				server = serversManager.getCurrentServer();
 				game = server.getGame();
 				while (game.getPlayers().size() > 0) {
-					if (keys[KeyEvent.VK_UP]) {
-						player.startJumping();
-					} else {
-						player.stopJumping();
-					}
-					if (keys[KeyEvent.VK_RIGHT]) {
-						player.startMovingRight();
-					} else {
-						player.stopMovingRight();
-					}
-					if (keys[KeyEvent.VK_LEFT]) {
-						player.startMovingLeft();
-					} else {
-						player.stopMovingLeft();
+					player = game.getPlayerById(id);
+					if(player != null){
+						if (keys[KeyEvent.VK_UP]) {
+							player.startJumping();
+						} else {
+							player.stopJumping();
+						}
+						if (keys[KeyEvent.VK_RIGHT]) {
+							player.startMovingRight();
+						} else {
+							player.stopMovingRight();
+						}
+						if (keys[KeyEvent.VK_LEFT]) {
+							player.startMovingLeft();
+						} else {
+							player.stopMovingLeft();
+						}
 					}
 					renderer.players = game.getPlayers();
 					renderer.levels = game.getLevels();
@@ -110,6 +115,7 @@ public class Client {
 
 				game = server.getGame();
 				player = server.joinGame();
+				id = player.getId();
 
 			}
 

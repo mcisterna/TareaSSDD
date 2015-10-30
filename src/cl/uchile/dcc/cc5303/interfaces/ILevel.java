@@ -7,4 +7,6 @@ import java.util.List;
 public interface ILevel extends Remote{
 
     List<IBench> getBenches() throws RemoteException;
+    int getId()  throws RemoteException;
+    int getStaticId() throws RemoteException;
 }

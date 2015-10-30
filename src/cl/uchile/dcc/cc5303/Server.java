@@ -1,7 +1,11 @@
 package cl.uchile.dcc.cc5303;
 
+import cl.uchile.dcc.cc5303.elements.Bench;
+import cl.uchile.dcc.cc5303.elements.Level;
 import cl.uchile.dcc.cc5303.elements.Player;
+import cl.uchile.dcc.cc5303.interfaces.IBench;
 import cl.uchile.dcc.cc5303.interfaces.IGame;
+import cl.uchile.dcc.cc5303.interfaces.ILevel;
 import cl.uchile.dcc.cc5303.interfaces.IPlayer;
 import cl.uchile.dcc.cc5303.interfaces.IServer;
 import cl.uchile.dcc.cc5303.interfaces.IServersManager;
@@ -13,6 +17,8 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.LinkedList;
+import java.util.List;
 
 public class Server extends UnicastRemoteObject implements IServer {
 
@@ -72,6 +78,84 @@ public class Server extends UnicastRemoteObject implements IServer {
         this.gameEngine = gameEngine;
         gameEngine.runGame();
     }
+    
+    @Override
+	public void runNewGame(String[] args) throws RemoteException {
+		if(args.length > 2) {
+            game = createAllTogetherGame(Integer.parseInt(args[2]));
+        }
+        else{
+            game = createNormalGame();
+        }
+		isRunning = true;
+		System.out.println("first server");
+
+		
+	}
+
+	@Override
+	public void resumeGame(IGame game) throws RemoteException {
+		this.game = createGame(game);
+		isRunning = true;
+		System.out.println("im starting");
+		
+	}
+	
+	private Game createGame(IGame game) throws RemoteException {
+		Game newgame = new Game();
+		
+		for(IPlayer player : game.getPlayers()) {
+			newgame.players.add(new Player(
+					player.getLeft(),
+					player.getTop(),
+					player.getHeight(),
+					player.getWidth(),
+					player.getLives(),
+					player.getPlayerCounter(),
+					player.getColor()));
+		}
+		
+	    for(ILevel l: game.getLevels()){
+	    	LinkedList<Bench> benches = new LinkedList<Bench>();
+	    	for(IBench b : l.getBenches()){
+	    		benches.add(new Bench(b.getLeft(),b.getTop(),b.getWidth(),b.getHeight()));
+	    	}
+	    	newgame.levels.add(new Level(l.getId(),l.getStaticId(),benches));
+	    }
+	    newgame.numPlayers = game.getNumPlayers();
+	    newgame.allTogether = game.getAllTogether();
+	    newgame.maxPlayers = game.getMaxPlayers();
+	    
+
+	    for(IPlayer player : game.getRanking()) {
+			newgame.ranking.add(new Player(
+					player.getLeft(),
+					player.getTop(),
+					player.getHeight(),
+					player.getWidth(),
+					player.getLives(),
+					player.getPlayerCounter(),
+					player.getColor()));
+		}
+
+		return newgame;
+	}
+
+	public Game createNormalGame() throws RemoteException {
+        return new Game();
+    }
+
+    public Game createAllTogetherGame(int numPlayers) throws RemoteException {
+        return new Game(numPlayers);
+    }
+
+	@Override
+	public void stopGame() throws RemoteException {
+		isRunning = false;
+		gameEngine.stop();
+		System.out.println("im stoping");
+		
+	}
 
     public static void main(String[] args) throws RemoteException, MalformedURLException, InterruptedException, NotBoundException {
     	if(args.length == 0){
@@ -102,48 +186,6 @@ public class Server extends UnicastRemoteObject implements IServer {
 
 
     }
-
-	@Override
-	public void runNewGame(String[] args) throws RemoteException {
-		if(args.length > 2) {
-            game = createAllTogetherGame(Integer.parseInt(args[2]));
-        }
-        else{
-            game = createNormalGame();
-        }
-		isRunning = true;
-
-		
-	}
-
-	@Override
-	public void resumeGame(Game game) {
-		this.game = game;
-		isRunning = true;
-		System.out.println("im starting");
-		
-	}
-	
-	public Game createNormalGame() throws RemoteException {
-        return new Game();
-    }
-
-    public Game createAllTogetherGame(int numPlayers) throws RemoteException {
-        return new Game(numPlayers);
-    }
-
-	@Override
-	public void stopGame() throws RemoteException {
-		isRunning = false;
-		gameEngine.stop();
-		System.out.println("im stoping");
-		
-	}
-
-	@Override
-	public Game getGame2() throws RemoteException {
-		return game;
-	}
 
 
 }

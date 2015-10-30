@@ -9,4 +9,8 @@ public interface IGame extends Remote{
     List<IPlayer> getPlayers() throws RemoteException;
     List<ILevel> getLevels() throws RemoteException;
     List<IPlayer> getRanking() throws RemoteException;
+    int getNumPlayers() throws RemoteException;
+    boolean getAllTogether() throws RemoteException;
+    int getMaxPlayers() throws RemoteException;
+	IPlayer getPlayerById(int id) throws RemoteException;
 }

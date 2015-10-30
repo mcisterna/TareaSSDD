@@ -4,6 +4,8 @@ import java.awt.*;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 
+import cl.uchile.dcc.cc5303.elements.Player;
+
 public interface IPlayer extends Remote{
 
     void startJumping() throws RemoteException;
@@ -20,4 +22,23 @@ public interface IPlayer extends Remote{
     Color getColor() throws RemoteException;
     int getLives() throws RemoteException;
     void setColor(Color color) throws RemoteException;
+    
+
+	int getPlayerCounter() throws RemoteException;
+	void setPlayerCounter(int playerCounter)  throws RemoteException;
+	boolean isStandingUp()  throws RemoteException;
+	void setStandingUp(boolean isStandingUp) throws RemoteException;
+	boolean isWantsToMoveRight() throws RemoteException;
+	void setWantsToMoveRight(boolean wantsToMoveRight) throws RemoteException;
+	boolean isWantsToMoveLeft()  throws RemoteException;
+	void setWantsToMoveLeft(boolean wantsToMoveLeft) throws RemoteException;
+	boolean isWantsToJump()  throws RemoteException;
+	void setWantsToJump(boolean wantsToJump) throws RemoteException;
+	double getSpeed()  throws RemoteException;
+	void setLives(int lives) throws RemoteException;
+	
+	int getId() throws RemoteException;
+
+	void setId(int id) throws RemoteException;
+
 }

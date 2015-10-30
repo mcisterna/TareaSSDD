@@ -12,4 +12,12 @@ public class Bench extends GameObject implements IBench {
         this.posX = x;
         this.posY = 600 - y - this.h;
     }
+	
+	public Bench(int x, int y, int width, int h) throws RemoteException {
+        super();
+        this.w = width;
+        this.h = h;
+        this.posX = x;
+        this.posY = y;
+    }
 }
