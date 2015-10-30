@@ -4,11 +4,13 @@ import cl.uchile.dcc.cc5303.elements.Player;
 import cl.uchile.dcc.cc5303.interfaces.IGame;
 import cl.uchile.dcc.cc5303.interfaces.IPlayer;
 import cl.uchile.dcc.cc5303.interfaces.IServer;
+import cl.uchile.dcc.cc5303.interfaces.IServersManager;
 
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
+import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
@@ -71,19 +73,19 @@ public class Server extends UnicastRemoteObject implements IServer {
         gameEngine.runGame();
     }
 
-    public static void main(String[] args) throws RemoteException, MalformedURLException, InterruptedException {
+    public static void main(String[] args) throws RemoteException, MalformedURLException, InterruptedException, NotBoundException {
     	if(args.length == 0){
         	System.out.println("Debe ingresar ip");
         	return;
         }
     	String ip = args[0];
-    	System.setProperty("java.rmi.server.hostname",ip);
     	String url = "rmi://"+ip+":1099/game";
         Game game;
         System.out.println("Starting server...");
         
         Server server = new Server();
-        Naming.rebind(url, server);
+        IServersManager serversManager = (IServersManager) Naming.lookup(url);
+        serversManager.addServer(server);
 
 
         while(true) {
@@ -118,6 +120,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 	public void resumeGame(Game game) {
 		this.game = game;
 		isRunning = true;
+		System.out.println("im starting");
 		
 	}
 	
@@ -133,6 +136,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 	public void stopGame() throws RemoteException {
 		isRunning = false;
 		gameEngine.stop();
+		System.out.println("im stoping");
 		
 	}
 

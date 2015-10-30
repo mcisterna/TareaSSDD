@@ -3,6 +3,7 @@ package cl.uchile.dcc.cc5303;
 import cl.uchile.dcc.cc5303.interfaces.IGame;
 import cl.uchile.dcc.cc5303.interfaces.IPlayer;
 import cl.uchile.dcc.cc5303.interfaces.IServer;
+import cl.uchile.dcc.cc5303.interfaces.IServersManager;
 
 import javax.swing.*;
 
@@ -27,14 +28,14 @@ public class Client {
 		}
 		String ip = args[0];
 		String url = "rmi://" + ip + ":1099/game";
-		IServer server = (IServer) Naming.lookup(url);
+		IServersManager serversManager = (IServersManager) Naming.lookup(url);
+		IServer server = serversManager.getCurrentServer();
 		IPlayer player = server.joinGame();
+		IGame game = null;
 
 		if (player == null) {
 			System.out.println("Game is full");
 		} else {
-			IGame game = server.getGame();
-
 			JFrame frame = new JFrame(TITLE);
 			frame.setVisible(true);
 			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -60,6 +61,8 @@ public class Client {
 			});
 
 			while (true) {
+				server = serversManager.getCurrentServer();
+				game = server.getGame();
 				while (game.getPlayers().size() > 0) {
 					if (keys[KeyEvent.VK_UP]) {
 						player.startJumping();

@@ -13,17 +13,19 @@ public class ServersManager extends UnicastRemoteObject implements IServersManag
 
     private ArrayList<IServer> servers;
     private final static double MAX_LOAD = 0.75;
+    public IServer currentServer;
 
     private ServersManager() throws RemoteException {
         super();
         this.servers = new ArrayList<IServer>();
     }
 
-    public void addServer(IServer server) {
+    @Override
+    public void addServer(IServer server) throws RemoteException{
         servers.add(server);
     }
 
-    public IServer getLowestLoadServer() throws RemoteException {
+    public IServer getLowestLoadServer() throws RemoteException{
         IServer lowestLoadServer = null;
         double lowestLoad = 1;
 
@@ -43,24 +45,33 @@ public class ServersManager extends UnicastRemoteObject implements IServersManag
         System.setProperty("java.rmi.server.hostname",ip);
         String url = "rmi://"+ip+":1099/game";
         Game game;
-        System.out.println("Starting server...");
+        System.out.println("Starting Server Manager...");
 
         ServersManager serversManager = new ServersManager();
         Naming.rebind(url, serversManager);
-
-        IServer currentServer = serversManager.getLowestLoadServer();
-        currentServer.runNewGame(args);
+        while(serversManager.currentServer == null){
+        	serversManager.currentServer = serversManager.getLowestLoadServer();
+        	Thread.sleep(1000);
+        }
+        serversManager.currentServer.runNewGame(args);
 
         while(true) {
-            if(currentServer.getLoad() > ServersManager.MAX_LOAD) {
-                currentServer.stopGame();
+        	System.out.println(serversManager.currentServer.getLoad());
+            if(serversManager.currentServer.getLoad() > ServersManager.MAX_LOAD) {
+            	serversManager.currentServer.stopGame();
                 IServer newServer = serversManager.getLowestLoadServer();
-                newServer.resumeGame(currentServer.getGame2());
+                newServer.resumeGame(serversManager.currentServer.getGame2());
                 }
 
             Thread.sleep(1000);
         }
     }
+
+	@Override
+	public IServer getCurrentServer() throws RemoteException {
+		
+		return currentServer;
+	}
 
 
 }
