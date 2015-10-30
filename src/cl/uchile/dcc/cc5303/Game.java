@@ -50,9 +50,9 @@ public class Game extends UnicastRemoteObject implements IGame {
     }
 
     public void restart() throws RemoteException {
-        this.players = new LinkedList<>();
-        this.ranking = new LinkedList<>();
-        this.levels = new LinkedList<>();
+        this.players = new LinkedList<Player>();
+        this.ranking = new LinkedList<Player>();
+        this.levels = new LinkedList<Level>();
         this.numPlayers = 0;
         Level.staticId = 0;
         for (int i = 0; i < 6; i++) {
