@@ -16,11 +16,12 @@ public class Server extends UnicastRemoteObject implements IServer {
 
 	public Game game;
     public int playersWaiting;
+	private boolean isRunning;
+	public GameEngine gameEngine;
 
 
-    public Server(Game game) throws RemoteException {
+    public Server() throws RemoteException {
         super();
-        this.game = game;
     }
 
     public IPlayer joinGame() throws RemoteException {
@@ -66,6 +67,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 
     private void startGame() throws RemoteException {
         GameEngine gameEngine = new GameEngine(this.game);
+        this.gameEngine = gameEngine;
         gameEngine.runGame();
     }
 
@@ -79,36 +81,65 @@ public class Server extends UnicastRemoteObject implements IServer {
     	String url = "rmi://"+ip+":1099/game";
         Game game;
         System.out.println("Starting server...");
-        if(args.length > 2) {
+        
+        Server server = new Server();
+        Naming.rebind(url, server);
+
+
+        while(true) {
+        	if(server.isRunning){
+	            server.waitUntilGameIsReadyToStart();
+	            server.startGame();
+	            if(server.gameEngine.isRunning()) {
+	                server.waitForAllPlayers();
+	                server.restartGame();
+	            }
+        	}
+        	Thread.sleep(1000);
+        }
+
+
+    }
+
+	@Override
+	public void runNewGame(String[] args) throws RemoteException {
+		if(args.length > 2) {
             game = createAllTogetherGame(Integer.parseInt(args[2]));
         }
         else{
             game = createNormalGame();
         }
+		isRunning = true;
 
-        Server server = new Server(game);
-        Naming.rebind(url, server);
+		
+	}
 
-
-        //Esto en otro thread?
-        while(true) {
-            server.waitUntilGameIsReadyToStart();
-            server.startGame();
-            if(elJuegoNoTerminoPorStop) {
-                server.waitForAllPlayers();
-                server.restartGame();
-            }
-            else {
-                break;
-            }
-        }
-        //Hasta aca
-
-        //Desde aca ir chequeando si el servidor esta sobrecargado
-        //Si lo esta, stopear el juego, pedir el servidor con menos carga al server manager,
-        //enviar Game al nuevo servidor, y enviar a los clientes la nueva IP
-
+	@Override
+	public void resumeGame(Game game) {
+		this.game = game;
+		isRunning = true;
+		
+	}
+	
+	public Game createNormalGame() throws RemoteException {
+        return new Game();
     }
+
+    public Game createAllTogetherGame(int numPlayers) throws RemoteException {
+        return new Game(numPlayers);
+    }
+
+	@Override
+	public void stopGame() throws RemoteException {
+		isRunning = false;
+		gameEngine.stop();
+		
+	}
+
+	@Override
+	public Game getGame2() throws RemoteException {
+		return game;
+	}
 
 
 }
