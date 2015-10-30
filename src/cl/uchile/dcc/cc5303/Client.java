@@ -94,6 +94,8 @@ public class Client {
 					}
 
 					frame.requestFocus();
+					game = server.getGame();
+
 				}
 				renderer.playing = false;
 				renderer.ranking = game.getRanking();

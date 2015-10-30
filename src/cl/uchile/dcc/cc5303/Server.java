@@ -115,6 +115,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 					player.getColor()));
 		}
 		
+		newgame.levels = new LinkedList<Level>();
 	    for(ILevel l: game.getLevels()){
 	    	LinkedList<Bench> benches = new LinkedList<Bench>();
 	    	for(IBench b : l.getBenches()){

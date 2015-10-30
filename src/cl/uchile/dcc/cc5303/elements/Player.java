@@ -42,6 +42,7 @@ public class Player extends GameObject implements IPlayer {
         this.w = w;
         this.lives = lives;
         this.color = color;
+        this.playerCounter = playerCounter;
 
     }
 
