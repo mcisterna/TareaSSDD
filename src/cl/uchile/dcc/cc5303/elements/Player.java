@@ -34,7 +34,7 @@ public class Player extends GameObject implements IPlayer {
         wantsToJump = false;
     }
     
-    public Player(int posX, int posY, int h, int w, int lives, int playerCounter, Color color) throws RemoteException {
+    public Player(int posX, int posY, int h, int w, int lives, double speed, int id, int playerCounter, Color color) throws RemoteException {
         super();
         this.posX = posX;
         this.posY = posY;
@@ -42,6 +42,8 @@ public class Player extends GameObject implements IPlayer {
         this.w = w;
         this.lives = lives;
         this.color = color;
+        this.id = id;
+        this.speed = speed;
         this.playerCounter = playerCounter;
 
     }
