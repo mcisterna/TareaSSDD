@@ -37,6 +37,7 @@ public class Server extends UnicastRemoteObject implements IServer {
         //Game is full
         if(game.numPlayers == game.maxPlayers) return null;
 
+		System.out.println("New player joined the game!");
         Player newPlayer = game.addPlayer();
         return newPlayer;
     }
@@ -74,6 +75,7 @@ public class Server extends UnicastRemoteObject implements IServer {
     }
 
     private void startGame() throws RemoteException {
+		System.out.println("New Game starting.");
         GameEngine gameEngine = new GameEngine(this.game);
         this.gameEngine = gameEngine;
         gameEngine.runGame();
@@ -88,7 +90,7 @@ public class Server extends UnicastRemoteObject implements IServer {
             game = createNormalGame();
         }
 		isRunning = true;
-		System.out.println("first server");
+		System.out.println("I'm the first server to run");
 
 		
 	}
@@ -165,8 +167,7 @@ public class Server extends UnicastRemoteObject implements IServer {
         }
     	String ip = args[0];
     	String url = "rmi://"+ip+":1099/game";
-        Game game;
-        System.out.println("Starting server...");
+        System.out.println("Server started.");
         
         Server server = new Server();
         IServersManager serversManager = (IServersManager) Naming.lookup(url);
@@ -178,8 +179,10 @@ public class Server extends UnicastRemoteObject implements IServer {
 	            server.waitUntilGameIsReadyToStart();
 	            server.startGame();
 	            if(server.gameEngine.isRunning()) {
+					System.out.println("Game finished normally.");
 	                server.waitForAllPlayers();
-	                server.restartGame();
+					server.restartGame();
+					System.out.println("Ready for next game.");
 	            }
         	}
         	Thread.sleep(1000);
