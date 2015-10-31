@@ -101,49 +101,55 @@ public class Server extends UnicastRemoteObject implements IServer {
 	public void resumeGame(IGame game) throws RemoteException {
 		this.game = createGame(game);
 		isRunning = true;
-		System.out.println("im starting");
+		System.out.println("It's my turn!");
 		
 	}
 	
 	private Game createGame(IGame game) throws RemoteException {
-		Game newgame = new Game();
-		
+
+		LinkedList<Player> players = new LinkedList<Player>();
+		LinkedList<Player> ranking = new LinkedList<Player>();
+		LinkedList<Level> levels = new LinkedList<Level>();
+		int numPlayers = game.getNumPlayers();
+		boolean allTogether = game.getAllTogether();
+		int maxPlayers = game.getMaxPlayers();
+
+		for(ILevel l: game.getLevels()){
+			LinkedList<Bench> benches = new LinkedList<Bench>();
+			for(IBench b : l.getBenches()){
+				benches.add(new Bench(b.getLeft(),b.getTop(),b.getWidth(),b.getHeight()));
+			}
+			levels.add(new Level(l.getId(), l.getStaticId(), benches));
+		}
+
+
 		for(IPlayer player : game.getPlayers()) {
-			newgame.players.add(new Player(
+			players.add(new Player(
 					player.getLeft(),
 					player.getTop(),
 					player.getHeight(),
 					player.getWidth(),
 					player.getLives(),
+					player.getSpeed(),
+					player.getId(),
 					player.getPlayerCounter(),
 					player.getColor()));
 		}
-		
-		newgame.levels = new LinkedList<Level>();
-	    for(ILevel l: game.getLevels()){
-	    	LinkedList<Bench> benches = new LinkedList<Bench>();
-	    	for(IBench b : l.getBenches()){
-	    		benches.add(new Bench(b.getLeft(),b.getTop(),b.getWidth(),b.getHeight()));
-	    	}
-	    	newgame.levels.add(new Level(l.getId(),l.getStaticId(),benches));
-	    }
-	    newgame.numPlayers = game.getNumPlayers();
-	    newgame.allTogether = game.getAllTogether();
-	    newgame.maxPlayers = game.getMaxPlayers();
-	    
 
 	    for(IPlayer player : game.getRanking()) {
-			newgame.ranking.add(new Player(
+			ranking.add(new Player(
 					player.getLeft(),
 					player.getTop(),
 					player.getHeight(),
 					player.getWidth(),
 					player.getLives(),
+					player.getSpeed(),
+					player.getId(),
 					player.getPlayerCounter(),
 					player.getColor()));
 		}
 
-		return newgame;
+		return new Game(allTogether, maxPlayers, numPlayers, players, ranking, levels);
 	}
 
 	public Game createNormalGame() throws RemoteException {
@@ -157,9 +163,8 @@ public class Server extends UnicastRemoteObject implements IServer {
 	@Override
 	public void stopGame() throws RemoteException {
 		isRunning = false;
-		gameEngine.stop();
-		System.out.println("im stoping");
-		
+		if(gameEngine != null ) gameEngine.stop();
+		System.out.println("I'm going to migrate the game.");
 	}
 
     public static void main(String[] args) throws RemoteException, MalformedURLException, InterruptedException, NotBoundException {
