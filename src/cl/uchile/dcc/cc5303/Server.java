@@ -68,8 +68,10 @@ public class Server extends UnicastRemoteObject implements IServer {
 
     private void waitUntilGameIsReadyToStart() throws InterruptedException {
         while(true) {
-            if((!this.game.isAllTogether() && this.game.players.size() > 1) ||
-                    (this.game.isAllTogether()) && this.game.maxPlayers == this.game.players.size()) break;
+            if(
+					(!this.game.isAllTogether() && this.game.players.size() > 1) ||
+                    (this.game.isAllTogether()) && this.game.maxPlayers == this.game.players.size() ||
+					!this.isRunning) break;
             Thread.sleep(1000);
         }
     }
