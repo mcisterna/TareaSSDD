@@ -27,11 +27,28 @@ public class Game extends UnicastRemoteObject implements IGame {
         numPlayers = 0;
         this.players = new LinkedList<Player>();
         this.ranking = new LinkedList<Player>();
-        levels = new LinkedList<Level>();
+        this.levels = new LinkedList<Level>();
         for (int i = 0; i < 6; i++) {
             Level l = new Level();
             levels.add(l);
         }
+    }
+
+    public Game(
+            boolean allTogether,
+            int maxPlayers,
+            int numPlayers,
+            LinkedList<Player> players,
+            LinkedList<Player> ranking,
+            LinkedList<Level> levels
+            ) throws RemoteException {
+        super();
+        this.allTogether = allTogether;
+        this.maxPlayers = maxPlayers;
+        this.numPlayers = numPlayers;
+        this.players = players;
+        this.ranking = ranking;
+        this.levels = levels;
     }
     
 
