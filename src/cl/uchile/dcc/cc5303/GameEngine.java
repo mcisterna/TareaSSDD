@@ -35,7 +35,6 @@ public class GameEngine {
 
     public void runGame() throws RemoteException {
 
-        System.out.println("Iniciando Juego de SSDD...");
         while (players.size() != 1 && running) { // main loop
             for (int j=0;j<players.size();j++) {
             	Player player = players.get(j);
