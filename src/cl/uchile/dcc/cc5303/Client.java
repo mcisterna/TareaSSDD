@@ -31,9 +31,7 @@ public class Client {
 		IServersManager serversManager = (IServersManager) Naming.lookup(url);
 		IServer server = serversManager.getCurrentServer();
 		IPlayer player = server.joinGame();
-		int id = player.getId(); 
-		
-		IGame game = null;
+
 
 		if (player == null) {
 			System.out.println("Game is full");
@@ -62,6 +60,8 @@ public class Client {
 				}
 			});
 
+			int id = player.getId();
+			IGame game;
 			while (true) {
 				server = serversManager.getCurrentServer();
 				game = server.getGame();
@@ -95,8 +95,12 @@ public class Client {
 
 					frame.requestFocus();
 					game = server.getGame();
+					server = serversManager.getCurrentServer();
 
 				}
+				//TODO: Aca todavia hay un problema, si uno apreta enter rapidamente, me va a mostrar el mapa
+				//viejo...ya que todavia no se crea el new game, se va a ir rapidamente al ranking denuevo, pero
+				//me lo va a mostrar vacio.
 				renderer.playing = false;
 				renderer.ranking = game.getRanking();
 				server.playerIsReadyToContinue();
@@ -115,7 +119,6 @@ public class Client {
 					}
 				}
 
-				game = server.getGame();
 				player = server.joinGame();
 				id = player.getId();
 
