@@ -44,7 +44,7 @@ public class ServersManager extends UnicastRemoteObject implements IServersManag
         String ip = args[0];
         System.setProperty("java.rmi.server.hostname",ip);
         String url = "rmi://"+ip+":1099/game";
-        System.out.println("Starting Server Manager...");
+        System.out.println("Servers Manager started.");
 
         ServersManager serversManager = new ServersManager();
         Naming.rebind(url, serversManager);
@@ -56,12 +56,13 @@ public class ServersManager extends UnicastRemoteObject implements IServersManag
 
         while(true) {
         	System.out.println(serversManager.currentServer.getLoad());
-            if(serversManager.currentServer.getGame().getPlayers().size() > 0 && serversManager.currentServer.getGame().getPlayers().get(0).isWantsToMoveLeft()) {
-            	serversManager.currentServer.stopGame();
+            if(serversManager.servers.size() == 3) {
+            	System.out.println("Migrating game.");
+                serversManager.currentServer.stopGame();
                 IServer newServer = serversManager.getLowestLoadServer();
                 newServer.resumeGame(serversManager.currentServer.getGame());
                 serversManager.currentServer = newServer;
-                }
+            }
 
             Thread.sleep(1000);
         }
