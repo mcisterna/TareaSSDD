@@ -18,7 +18,8 @@ public class Game extends UnicastRemoteObject implements IGame {
     public int numPlayers;
     public boolean allTogether;
     public int maxPlayers;
-    List<Player> ranking;
+    public List<Player> ranking;
+    public boolean freeSlot;
 
     public Game() throws RemoteException {
         super();
@@ -32,6 +33,7 @@ public class Game extends UnicastRemoteObject implements IGame {
             Level l = new Level();
             levels.add(l);
         }
+        this.freeSlot = false;
     }
 
     public Game(
@@ -49,6 +51,7 @@ public class Game extends UnicastRemoteObject implements IGame {
         this.players = players;
         this.ranking = ranking;
         this.levels = levels;
+        this.freeSlot = false;
     }
     
 
@@ -60,6 +63,7 @@ public class Game extends UnicastRemoteObject implements IGame {
         this.players = new LinkedList<Player>();
         this.ranking = new LinkedList<Player>();
         this.levels = new LinkedList<Level>();
+        this.freeSlot = false;
         for (int i = 0; i < 6; i++) {
             Level l = new Level();
             levels.add(l);
@@ -179,5 +183,28 @@ public class Game extends UnicastRemoteObject implements IGame {
 				return p;
 		}
 		return null;
+	}
+
+	@Override
+	public void exit() throws RemoteException {
+		for(int i=0;i<players.size();i++){
+			if(!players.get(i).isPlaying()){
+				freeSlot = true;
+				this.numPlayers--;
+				Player.playerCounter = (Player.playerCounter - 1) % 4;
+				players.remove(i);
+				break;
+			}
+		}
+		for(int i=0;i<ranking.size();i++){
+			if(!ranking.get(i).isPlaying()){
+				freeSlot = true;
+				this.numPlayers--;
+				Player.playerCounter = (Player.playerCounter - 1) % 4;
+				ranking.remove(i);
+				break;
+			}
+		}
+		
 	}
 }

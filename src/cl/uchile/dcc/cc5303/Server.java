@@ -198,5 +198,16 @@ public class Server extends UnicastRemoteObject implements IServer {
 
     }
 
+	@Override
+	public boolean hasFreeSlot() throws RemoteException {
+		return game.freeSlot;
+	}
+
+	@Override
+	public void setFreeSlot(boolean b) throws RemoteException {
+		game.freeSlot = b;
+		
+	}
+
 
 }

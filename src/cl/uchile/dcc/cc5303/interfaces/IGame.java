@@ -13,4 +13,5 @@ public interface IGame extends Remote{
     boolean getAllTogether() throws RemoteException;
     int getMaxPlayers() throws RemoteException;
 	IPlayer getPlayerById(int id) throws RemoteException;
+	void exit() throws RemoteException;
 }

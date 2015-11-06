@@ -72,6 +72,7 @@ public class GameEngine {
                     }
                 }
             }
+            game.exit();
 
             for (Player player : players)
                 player.update(DX);
@@ -105,7 +106,9 @@ public class GameEngine {
             } catch (InterruptedException ex) {
 
             }
+            
         }
+        
         if(running) {
             ranking.add(0, players.get(0));
             players.remove(players.get(0));

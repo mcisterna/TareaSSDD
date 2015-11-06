@@ -15,6 +15,7 @@ public class Player extends GameObject implements IPlayer {
     public boolean isStandingUp = false;
     public int lives;
     public int id;
+    public boolean playing;
     
 	Color color;
     public boolean wantsToMoveRight, wantsToMoveLeft, wantsToJump;
@@ -32,6 +33,7 @@ public class Player extends GameObject implements IPlayer {
         wantsToMoveLeft = false;
         wantsToMoveRight = false;
         wantsToJump = false;
+        playing = true;
     }
     
     public Player(int posX, int posY, int h, int w, int lives, double speed, int id, int playerCounter, Color color) throws RemoteException {
@@ -45,6 +47,7 @@ public class Player extends GameObject implements IPlayer {
         this.id = id;
         this.speed = speed;
         this.playerCounter = playerCounter;
+        playing = true;
 
     }
 
@@ -207,6 +210,16 @@ public class Player extends GameObject implements IPlayer {
 
 	public void setId(int id) {
 		this.id = id;
+	}
+
+	@Override
+	public void stopPlaying() throws RemoteException{
+		this.playing = false;
+		
+	}
+
+	public boolean isPlaying() {
+		return playing;
 	}
 
 }

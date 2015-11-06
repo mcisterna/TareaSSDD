@@ -40,5 +40,6 @@ public interface IPlayer extends Remote{
 	int getId() throws RemoteException;
 
 	void setId(int id) throws RemoteException;
+	void stopPlaying() throws RemoteException;
 
 }

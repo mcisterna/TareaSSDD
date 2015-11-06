@@ -83,6 +83,10 @@ public class Client {
 						} else {
 							player.stopMovingLeft();
 						}
+						if (keys[KeyEvent.VK_Q]) {
+							player.stopPlaying();
+							System.exit(0);
+						}
 					}
 					renderer.players = game.getPlayers();
 					renderer.levels = game.getLevels();
