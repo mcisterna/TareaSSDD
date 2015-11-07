@@ -6,8 +6,10 @@ import cl.uchile.dcc.cc5303.interfaces.IGame;
 import cl.uchile.dcc.cc5303.interfaces.ILevel;
 import cl.uchile.dcc.cc5303.interfaces.IPlayer;
 
+import java.awt.*;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,6 +22,7 @@ public class Game extends UnicastRemoteObject implements IGame {
     public int maxPlayers;
     public List<Player> ranking;
     public boolean freeSlot;
+    public List<Color> availableColors = new LinkedList<Color>(Arrays.asList(Color.red, Color.blue, Color.green, Color.cyan));
 
     public Game() throws RemoteException {
         super();
@@ -42,8 +45,8 @@ public class Game extends UnicastRemoteObject implements IGame {
             int numPlayers,
             LinkedList<Player> players,
             LinkedList<Player> ranking,
-            LinkedList<Level> levels
-            ) throws RemoteException {
+            LinkedList<Level> levels,
+            List<Color> availableColors) throws RemoteException {
         super();
         this.allTogether = allTogether;
         this.maxPlayers = maxPlayers;
@@ -52,6 +55,7 @@ public class Game extends UnicastRemoteObject implements IGame {
         this.ranking = ranking;
         this.levels = levels;
         this.freeSlot = false;
+        this.availableColors = availableColors;
     }
     
 
@@ -74,6 +78,7 @@ public class Game extends UnicastRemoteObject implements IGame {
         this.players = new LinkedList<Player>();
         this.ranking = new LinkedList<Player>();
         this.levels = new LinkedList<Level>();
+        this.availableColors = new LinkedList<Color>(Arrays.asList(Color.red, Color.blue, Color.green, Color.cyan));
         this.numPlayers = 0;
         Level.staticId = 0;
         for (int i = 0; i < 6; i++) {
@@ -137,6 +142,7 @@ public class Game extends UnicastRemoteObject implements IGame {
         Player newPlayer = isAllTogether() || numPlayers < 2 ?
                 new Player(100 + numPlayers*150, 50, 3) : new Player(400, 220, 3);
 
+        newPlayer.color = availableColors.remove(0);
         players.add(newPlayer);
         this.numPlayers++;
         return newPlayer;
@@ -191,7 +197,7 @@ public class Game extends UnicastRemoteObject implements IGame {
 			if(!players.get(i).isPlaying()){
 				freeSlot = true;
 				this.numPlayers--;
-				Player.playerCounter = (Player.playerCounter - 1) % 4;
+                availableColors.add(players.get(i).getColor());
 				players.remove(i);
 				break;
 			}
@@ -200,11 +206,17 @@ public class Game extends UnicastRemoteObject implements IGame {
 			if(!ranking.get(i).isPlaying()){
 				freeSlot = true;
 				this.numPlayers--;
-				Player.playerCounter = (Player.playerCounter - 1) % 4;
+                availableColors.add(players.get(i).getColor());
 				ranking.remove(i);
 				break;
 			}
 		}
-		
 	}
+
+    @Override
+    public List<Color> getAvailableColors() throws RemoteException {
+        return availableColors;
+    }
+
+
 }
