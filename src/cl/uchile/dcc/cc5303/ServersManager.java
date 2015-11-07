@@ -55,8 +55,8 @@ public class ServersManager extends UnicastRemoteObject implements IServersManag
         serversManager.currentServer.runNewGame(args);
 
         while(true) {
-        	System.out.println(serversManager.currentServer.getLoad());
-            if(serversManager.currentServer.getLoad() > 5 || serversManager.currentServer.hasFreeSlot()) {
+        	System.out.println("Current load: " + serversManager.currentServer.getLoad());
+            if(serversManager.currentServer.getLoad() > MAX_LOAD || serversManager.currentServer.hasFreeSlot()) {
             	serversManager.currentServer.setFreeSlot(false);
             	System.out.println("Migrating game.");
                 serversManager.currentServer.stopGame();
