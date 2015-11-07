@@ -35,7 +35,7 @@ public class GameEngine {
 
     public void runGame() throws RemoteException {
 
-        while (players.size() != 1 && running) { // main loop
+        while ((ranking.size() == 0 || players.size() != 1) && running) { // main loop
             for (int j=0;j<players.size();j++) {
             	Player player = players.get(j);
 
