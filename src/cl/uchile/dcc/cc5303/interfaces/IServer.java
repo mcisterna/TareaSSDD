@@ -16,4 +16,6 @@ public interface IServer extends Remote{
 	void stopGame() throws RemoteException;
 	boolean hasFreeSlot() throws RemoteException;
 	void setFreeSlot(boolean b) throws RemoteException;
+
+	String getIp() throws RemoteException;
 }

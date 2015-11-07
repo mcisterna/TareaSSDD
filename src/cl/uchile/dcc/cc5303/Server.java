@@ -27,10 +27,12 @@ public class Server extends UnicastRemoteObject implements IServer {
     public int playersWaiting;
 	private boolean isRunning;
 	public GameEngine gameEngine;
+	private String ip;
 
 
-    public Server() throws RemoteException {
+    public Server(String ip) throws RemoteException {
         super();
+		this.ip = ip;
     }
 
     public IPlayer joinGame() throws RemoteException {
@@ -174,14 +176,21 @@ public class Server extends UnicastRemoteObject implements IServer {
         	System.out.println("Debe ingresar ip");
         	return;
         }
-    	String ip = args[0];
-    	String url = "rmi://"+ip+":1099/game";
-        System.out.println("Server started.");
-        
-        Server server = new Server();
-        IServersManager serversManager = (IServersManager) Naming.lookup(url);
+
+		String myIp = args[0];
+    	String serversManagerIp = args[1];
+		System.setProperty("java.rmi.server.hostname",myIp);
+
+    	String serversManagerUrl = "rmi://"+serversManagerIp+":1099/servers_manager";
+		String gameServerUrl = "rmi://" + myIp + ":1099/game_server";
+
+		Server server = new Server(myIp);
+		Naming.rebind(gameServerUrl, server);
+
+		IServersManager serversManager = (IServersManager) Naming.lookup(serversManagerUrl);
         serversManager.addServer(server);
 
+		System.out.println("Server started.");
 
         while(true) {
         	if(server.isRunning){
@@ -211,5 +220,8 @@ public class Server extends UnicastRemoteObject implements IServer {
 		
 	}
 
-
+	@Override
+	public String getIp() throws RemoteException{
+		return ip;
+	}
 }

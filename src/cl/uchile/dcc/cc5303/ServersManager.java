@@ -43,7 +43,7 @@ public class ServersManager extends UnicastRemoteObject implements IServersManag
         }
         String ip = args[0];
         System.setProperty("java.rmi.server.hostname",ip);
-        String url = "rmi://"+ip+":1099/game";
+        String url = "rmi://"+ip+":1099/servers_manager";
         System.out.println("Servers Manager started.");
 
         ServersManager serversManager = new ServersManager();
@@ -56,7 +56,7 @@ public class ServersManager extends UnicastRemoteObject implements IServersManag
 
         while(true) {
         	System.out.println(serversManager.currentServer.getLoad());
-            if(serversManager.currentServer.getLoad() > MAX_LOAD || serversManager.currentServer.hasFreeSlot()) {
+            if(serversManager.currentServer.getLoad() > 5 || serversManager.currentServer.hasFreeSlot()) {
             	serversManager.currentServer.setFreeSlot(false);
             	System.out.println("Migrating game.");
                 serversManager.currentServer.stopGame();
@@ -70,9 +70,9 @@ public class ServersManager extends UnicastRemoteObject implements IServersManag
     }
 
 	@Override
-	public IServer getCurrentServer() throws RemoteException {
+	public String getCurrentServerIp() throws RemoteException {
 		
-		return currentServer;
+		return currentServer.getIp();
 	}
 
 

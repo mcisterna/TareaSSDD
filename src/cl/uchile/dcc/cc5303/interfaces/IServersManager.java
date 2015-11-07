@@ -8,6 +8,6 @@ import java.rmi.RemoteException;
  */
 public interface IServersManager extends Remote{
 
-	IServer getCurrentServer() throws RemoteException;
+	String getCurrentServerIp() throws RemoteException;
 	void addServer(IServer server) throws RemoteException;
 }

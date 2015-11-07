@@ -19,6 +19,14 @@ public class Client {
 	private final static String TITLE = "Juego - CC5303";
 	private final static int WIDTH = 800, HEIGHT = 600;
 
+
+	static public IServer getCurrentServer(IServersManager serversManager) throws RemoteException, MalformedURLException, NotBoundException {
+		String gameServerIp = serversManager.getCurrentServerIp();
+		String gameServerUrl = "rmi://" + gameServerIp + ":1099/game_server";
+		IServer gameServer = (IServer)Naming.lookup(gameServerUrl);
+		return gameServer;
+	}
+
 	static public void main(String[] args) throws RemoteException, NotBoundException, MalformedURLException {
 		System.out.println("Starting client...");
 		final boolean[] keys = new boolean[KeyEvent.KEY_LAST];
@@ -26,11 +34,12 @@ public class Client {
 			System.out.println("Debe ingresar ip");
 			return;
 		}
-		String ip = args[0];
-		String url = "rmi://" + ip + ":1099/game";
-		IServersManager serversManager = (IServersManager) Naming.lookup(url);
-		IServer server = serversManager.getCurrentServer();
-		IPlayer player = server.joinGame();
+		String serversManagerIp = args[0];
+		String serversManagerUrl = "rmi://" + serversManagerIp + ":1099/servers_manager";
+		IServersManager serversManager = (IServersManager) Naming.lookup(serversManagerUrl);
+
+		IServer gameServer = getCurrentServer(serversManager);
+		IPlayer player = gameServer.joinGame();
 
 
 		if (player == null) {
@@ -63,8 +72,8 @@ public class Client {
 			int id = player.getId();
 			IGame game;
 			while (true) {
-				server = serversManager.getCurrentServer();
-				game = server.getGame();
+				gameServer = getCurrentServer(serversManager);
+				game = gameServer.getGame();
 				while (game.getPlayers().size() > 0) {
 					player = game.getPlayerById(id);
 					if(player != null){
@@ -98,8 +107,8 @@ public class Client {
 					}
 
 					frame.requestFocus();
-					game = server.getGame();
-					server = serversManager.getCurrentServer();
+					game = gameServer.getGame();
+					gameServer = getCurrentServer(serversManager);
 
 				}
 				//TODO: Aca todavia hay un problema, si uno apreta enter rapidamente, me va a mostrar el mapa
@@ -107,7 +116,7 @@ public class Client {
 				//me lo va a mostrar vacio.
 				renderer.playing = false;
 				renderer.ranking = game.getRanking();
-				server.playerIsReadyToContinue();
+				gameServer.playerIsReadyToContinue();
 
 				while (!renderer.playing) {
 					renderer.repaint();
@@ -123,7 +132,7 @@ public class Client {
 					}
 				}
 
-				player = server.joinGame();
+				player = gameServer.joinGame();
 				id = player.getId();
 
 			}
