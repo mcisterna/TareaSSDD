@@ -10,6 +10,7 @@ import cl.uchile.dcc.cc5303.interfaces.IPlayer;
 import cl.uchile.dcc.cc5303.interfaces.IServer;
 import cl.uchile.dcc.cc5303.interfaces.IServersManager;
 
+import java.awt.*;
 import java.lang.management.ManagementFactory;
 import java.lang.management.OperatingSystemMXBean;
 import java.net.MalformedURLException;
@@ -113,6 +114,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 		int numPlayers = game.getNumPlayers();
 		boolean allTogether = game.getAllTogether();
 		int maxPlayers = game.getMaxPlayers();
+		List<Color> availableColors = game.getAvailableColors();
 
 		for(ILevel l: game.getLevels()){
 			LinkedList<Bench> benches = new LinkedList<Bench>();
@@ -149,7 +151,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 					player.getColor()));
 		}
 
-		return new Game(allTogether, maxPlayers, numPlayers, players, ranking, levels);
+		return new Game(allTogether, maxPlayers, numPlayers, players, ranking, levels, availableColors);
 	}
 
 	public Game createNormalGame() throws RemoteException {
