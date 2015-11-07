@@ -10,14 +10,13 @@ import java.util.List;
 public class Player extends GameObject implements IPlayer {
 
 	public static int playerCounter= 0;
-    static public Color[] playerColors = {Color.red, Color.blue, Color.green, Color.cyan};
     double speed = 0.4;
     public boolean isStandingUp = false;
     public int lives;
     public int id;
     public boolean playing;
-    
-	Color color;
+	public Color color = Color.RED;
+
     public boolean wantsToMoveRight, wantsToMoveLeft, wantsToJump;
 
     public Player(int x, int y, int lives) throws RemoteException {
@@ -27,8 +26,7 @@ public class Player extends GameObject implements IPlayer {
         this.h = 20;
         this.w = 14;
         this.lives = lives;
-        this.color = playerColors[playerCounter];
-        playerCounter = (playerCounter + 1) % 4;
+        playerCounter++;
         id = playerCounter;
         wantsToMoveLeft = false;
         wantsToMoveRight = false;
