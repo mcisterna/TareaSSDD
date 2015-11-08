@@ -27,10 +27,13 @@ public class ServersManager extends UnicastRemoteObject implements IServersManag
 
     public IServer getLowestLoadServer() throws RemoteException{
         IServer lowestLoadServer = null;
-        double lowestLoad = 5;
+        double lowestLoad = Integer.MAX_VALUE;
 
         for(IServer server : servers) {
-            if(server.getLoad() < lowestLoad) lowestLoadServer = server;
+            if(server.getLoad() < lowestLoad){
+                lowestLoad = server.getLoad();
+                lowestLoadServer = server;
+            }
         }
 
         return  lowestLoadServer;
@@ -56,7 +59,8 @@ public class ServersManager extends UnicastRemoteObject implements IServersManag
 
         while(true) {
         	System.out.println("Current load: " + serversManager.currentServer.getLoad());
-            if(serversManager.currentServer.getLoad() > MAX_LOAD || serversManager.currentServer.hasFreeSlot()) {
+            if((serversManager.currentServer.getLoad() > MAX_LOAD || serversManager.currentServer.hasFreeSlot()) &&
+                    serversManager.servers.size() > 1) {
             	serversManager.currentServer.setFreeSlot(false);
             	System.out.println("Migrating game.");
                 serversManager.currentServer.stopGame();
