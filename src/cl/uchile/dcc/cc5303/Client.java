@@ -98,6 +98,11 @@ public class Client {
 						}
 						if(keys[KeyEvent.VK_P]) {
 							game.togglePause();
+							try {
+								Thread.sleep(1000);//UPDATE RATE DEL game engine
+							} catch (InterruptedException ex) {
+
+							}
 						}
 					}
 					renderer.players = game.getPlayers();
