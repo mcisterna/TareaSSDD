@@ -23,6 +23,7 @@ public class Game extends UnicastRemoteObject implements IGame {
     public List<Player> ranking;
     public boolean freeSlot;
     public List<Color> availableColors = new LinkedList<Color>(Arrays.asList(Color.red, Color.blue, Color.green, Color.cyan));
+    public boolean pause;
 
     public Game() throws RemoteException {
         super();
@@ -37,6 +38,7 @@ public class Game extends UnicastRemoteObject implements IGame {
             levels.add(l);
         }
         this.freeSlot = false;
+        this.pause = false;
     }
 
     public Game(
@@ -46,7 +48,8 @@ public class Game extends UnicastRemoteObject implements IGame {
             LinkedList<Player> players,
             LinkedList<Player> ranking,
             LinkedList<Level> levels,
-            List<Color> availableColors) throws RemoteException {
+            List<Color> availableColors,
+            boolean pause) throws RemoteException {
         super();
         this.allTogether = allTogether;
         this.maxPlayers = maxPlayers;
@@ -56,6 +59,7 @@ public class Game extends UnicastRemoteObject implements IGame {
         this.levels = levels;
         this.freeSlot = false;
         this.availableColors = availableColors;
+        this.pause = pause;
     }
     
 
@@ -68,6 +72,7 @@ public class Game extends UnicastRemoteObject implements IGame {
         this.ranking = new LinkedList<Player>();
         this.levels = new LinkedList<Level>();
         this.freeSlot = false;
+        this.pause = false;
         for (int i = 0; i < 6; i++) {
             Level l = new Level();
             levels.add(l);
@@ -91,6 +96,7 @@ public class Game extends UnicastRemoteObject implements IGame {
     public boolean isAllTogether() {
         return allTogether;
     }
+
 
     public void moveStageDown() throws RemoteException {
         levels.add(new Level());
@@ -135,6 +141,11 @@ public class Game extends UnicastRemoteObject implements IGame {
     
     public List<Player> getLocalRanking(){
     	return ranking;
+    }
+
+    @Override
+    public boolean isPaused() {
+        return pause;
     }
 
     public Player addPlayer() throws RemoteException {
@@ -212,6 +223,11 @@ public class Game extends UnicastRemoteObject implements IGame {
 			}
 		}
 	}
+
+    @Override
+    public void togglePause() throws RemoteException{
+        this.pause = !this.pause;
+    }
 
     @Override
     public List<Color> getAvailableColors() throws RemoteException {

@@ -3,16 +3,10 @@ package cl.uchile.dcc.cc5303;
 import cl.uchile.dcc.cc5303.elements.Bench;
 import cl.uchile.dcc.cc5303.elements.Level;
 import cl.uchile.dcc.cc5303.elements.Player;
-import cl.uchile.dcc.cc5303.interfaces.IBench;
-import cl.uchile.dcc.cc5303.interfaces.IGame;
-import cl.uchile.dcc.cc5303.interfaces.ILevel;
-import cl.uchile.dcc.cc5303.interfaces.IPlayer;
-import cl.uchile.dcc.cc5303.interfaces.IServer;
-import cl.uchile.dcc.cc5303.interfaces.IServersManager;
+import cl.uchile.dcc.cc5303.interfaces.*;
 
 import java.awt.*;
 import java.lang.management.ManagementFactory;
-import java.lang.management.OperatingSystemMXBean;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
@@ -117,6 +111,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 		boolean allTogether = game.getAllTogether();
 		int maxPlayers = game.getMaxPlayers();
 		List<Color> availableColors = game.getAvailableColors();
+		boolean pause = game.isPaused();
 
 		for(ILevel l: game.getLevels()){
 			LinkedList<Bench> benches = new LinkedList<Bench>();
@@ -153,7 +148,7 @@ public class Server extends UnicastRemoteObject implements IServer {
 					player.getColor()));
 		}
 
-		return new Game(allTogether, maxPlayers, numPlayers, players, ranking, levels, availableColors);
+		return new Game(allTogether, maxPlayers, numPlayers, players, ranking, levels, availableColors, pause);
 	}
 
 	public Game createNormalGame() throws RemoteException {

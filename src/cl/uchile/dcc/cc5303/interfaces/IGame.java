@@ -3,7 +3,6 @@ package cl.uchile.dcc.cc5303.interfaces;
 import java.awt.*;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import java.util.LinkedList;
 import java.util.List;
 
 public interface IGame extends Remote{
@@ -16,6 +15,8 @@ public interface IGame extends Remote{
     int getMaxPlayers() throws RemoteException;
 	IPlayer getPlayerById(int id) throws RemoteException;
 	void exit() throws RemoteException;
+    void togglePause() throws RemoteException;
+    boolean isPaused() throws RemoteException;
 
     List<Color> getAvailableColors() throws RemoteException;
 }
