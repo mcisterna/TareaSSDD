@@ -36,77 +36,79 @@ public class GameEngine {
     public void runGame() throws RemoteException {
 
         while ((ranking.size() == 0 || players.size() != 1) && running) { // main loop
-            for (int j=0;j<players.size();j++) {
-            	Player player = players.get(j);
+            System.out.println(game.isPaused());
+            while (!game.isPaused()) {
+                for (int j = 0; j < players.size(); j++) {
+                    Player player = players.get(j);
 
-                if (player.wantsToJump && !player.isTopCollidingWith(players)) player.jump();
-                if (player.wantsToMoveRight &&
-                        !player.isRightCollidingWith(players) &&
-                        !player.isRightCollidingBenches(levels)) player.moveRight();
-                if (player.wantsToMoveLeft &&
-                        !player.isLeftCollidingWith(players) &&
-                        !player.isLeftCollidingBenches(levels)) player.moveLeft();
-                
-                if(player.isRightCollidingWith(players)){
-                	for (int i = 0; i < 10; i++)
-                		player.moveLeft();
+                    if (player.wantsToJump && !player.isTopCollidingWith(players)) player.jump();
+                    if (player.wantsToMoveRight &&
+                            !player.isRightCollidingWith(players) &&
+                            !player.isRightCollidingBenches(levels)) player.moveRight();
+                    if (player.wantsToMoveLeft &&
+                            !player.isLeftCollidingWith(players) &&
+                            !player.isLeftCollidingBenches(levels)) player.moveLeft();
 
-                }
-                	
-                if(player.isLeftCollidingWith(players)){
-                	for (int i = 0; i < 10; i++)
-                		player.moveRight();
-                }
-                	
+                    if (player.isRightCollidingWith(players)) {
+                        for (int i = 0; i < 10; i++)
+                            player.moveLeft();
+
+                    }
+
+                    if (player.isLeftCollidingWith(players)) {
+                        for (int i = 0; i < 10; i++)
+                            player.moveRight();
+                    }
 
 
-                if (player.getTop() > game.levels.getFirst().getBenches().get(0).getBottom()) {
-                    player.looseLife();
-                    if (player.getLives() != 0) {
-                        player.setPosY(220);
-                        player.setPosX(400);
-                    } else {
-                        players.remove(player);
-                        j--;
-                        ranking.add(0,player);
+                    if (player.getTop() > game.levels.getFirst().getBenches().get(0).getBottom()) {
+                        player.looseLife();
+                        if (player.getLives() != 0) {
+                            player.setPosY(220);
+                            player.setPosX(400);
+                        } else {
+                            players.remove(player);
+                            j--;
+                            ranking.add(0, player);
+                        }
                     }
                 }
-            }
-            game.exit();
+                game.exit();
 
-            for (Player player : players)
-                player.update(DX);
+                for (Player player : players)
+                    player.update(DX);
 
-            boolean needNextLevel = false;
-            for (Level l : levels) {
-                for (Bench barra : l.getLocalBenches()) {
-                    for (Player player : players) {
-                        if (player.isTopCollidingWith(barra))
-                            player.setSpeed(0.8);
-                        else if (player.isBottomCollidingWith(barra)) {
-                            player.setSpeed(0.01);
-                            player.isStandingUp = true;
-                            if (l.id == 4) {
-                                needNextLevel = true;
+                boolean needNextLevel = false;
+                for (Level l : levels) {
+                    for (Bench barra : l.getLocalBenches()) {
+                        for (Player player : players) {
+                            if (player.isTopCollidingWith(barra))
+                                player.setSpeed(0.8);
+                            else if (player.isBottomCollidingWith(barra)) {
+                                player.setSpeed(0.01);
+                                player.isStandingUp = true;
+                                if (l.id == 4) {
+                                    needNextLevel = true;
+                                }
+                            }
+                            if (player.isBottomCollidingWith(players)) {
+                                player.setSpeed(0.01);
+                                player.isStandingUp = true;
                             }
                         }
-                        if (player.isBottomCollidingWith(players)) {
-                            player.setSpeed(0.01);
-                            player.isStandingUp = true;
-                        }
+
                     }
+                }
+
+                if (needNextLevel) game.moveStageDown();
+
+                try {
+                    Thread.sleep(1000 / UPDATE_RATE);
+                } catch (InterruptedException ex) {
 
                 }
-            }
-
-            if (needNextLevel) game.moveStageDown();
-
-            try {
-                Thread.sleep(1000 / UPDATE_RATE);
-            } catch (InterruptedException ex) {
 
             }
-            
         }
         
         if(running) {
