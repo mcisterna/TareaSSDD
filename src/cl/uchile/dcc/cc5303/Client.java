@@ -96,6 +96,9 @@ public class Client {
 							player.stopPlaying();
 							System.exit(0);
 						}
+						if(keys[KeyEvent.VK_P]) {
+							game.togglePause();
+						}
 					}
 					renderer.players = game.getPlayers();
 					renderer.levels = game.getLevels();
