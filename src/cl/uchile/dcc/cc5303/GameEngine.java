@@ -108,6 +108,11 @@ public class GameEngine {
                 }
 
             }
+            try {
+                Thread.sleep(1000 / UPDATE_RATE);
+            } catch (InterruptedException ex) {
+
+            }
         }
         
         if(running) {

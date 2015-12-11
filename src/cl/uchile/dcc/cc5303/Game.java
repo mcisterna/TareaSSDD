@@ -148,6 +148,16 @@ public class Game extends UnicastRemoteObject implements IGame {
         return pause;
     }
 
+    @Override
+    public void pause() throws RemoteException {
+        this.pause = true;
+    }
+
+    @Override
+    public void resume() throws RemoteException {
+        this.pause = false;
+    }
+
     public Player addPlayer() throws RemoteException {
 
         Player newPlayer = isAllTogether() || numPlayers < 2 ?
@@ -174,21 +184,18 @@ public class Game extends UnicastRemoteObject implements IGame {
 
 	@Override
 	public int getNumPlayers() throws RemoteException {
-		// TODO Auto-generated method stub
 		return numPlayers;
 	}
 
 
 	@Override
 	public boolean getAllTogether() throws RemoteException {
-		// TODO Auto-generated method stub
 		return allTogether;
 	}
 
 
 	@Override
 	public int getMaxPlayers() throws RemoteException {
-		// TODO Auto-generated method stub
 		return maxPlayers;
 	}
 
@@ -223,11 +230,6 @@ public class Game extends UnicastRemoteObject implements IGame {
 			}
 		}
 	}
-
-    @Override
-    public void togglePause() throws RemoteException{
-        this.pause = !this.pause;
-    }
 
     @Override
     public List<Color> getAvailableColors() throws RemoteException {
