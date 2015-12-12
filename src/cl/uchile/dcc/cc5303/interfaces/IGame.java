@@ -16,8 +16,7 @@ public interface IGame extends Remote{
 	IPlayer getPlayerById(int id) throws RemoteException;
 	void exit() throws RemoteException;
     boolean isPaused() throws RemoteException;
-    void pause() throws RemoteException;
-    void resume() throws RemoteException;
+    void togglePause() throws RemoteException;
 
     List<Color> getAvailableColors() throws RemoteException;
 }

@@ -149,13 +149,8 @@ public class Game extends UnicastRemoteObject implements IGame {
     }
 
     @Override
-    public void pause() throws RemoteException {
-        this.pause = true;
-    }
-
-    @Override
-    public void resume() throws RemoteException {
-        this.pause = false;
+    public void togglePause() throws RemoteException {
+        this.pause = !this.pause;
     }
 
     public Player addPlayer() throws RemoteException {

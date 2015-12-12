@@ -96,11 +96,13 @@ public class Client {
 							player.stopPlaying();
 							System.exit(0);
 						}
-						if(keys[KeyEvent.VK_P]) {
-							game.pause();
-						}
-						if(keys[KeyEvent.VK_O]) {
-							game.resume();
+						if(keys[KeyEvent.VK_SPACE]) {
+							game.togglePause();
+							try {
+								Thread.sleep(300);//UPDATE RATE DEL game engine
+							} catch (InterruptedException ex) {
+
+							}
 						}
 					}
 					renderer.players = game.getPlayers();
